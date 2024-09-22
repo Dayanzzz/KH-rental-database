@@ -1,2 +1,0 @@
-# rental-database
-# rental-database
