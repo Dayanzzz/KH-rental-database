@@ -15,6 +15,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "dotenv": "^16.4.5",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -31,7 +32,6 @@
     "sequelize-cli": "^6.6.2"
   },
   "devDependencies": {
-    "dotenv": "^16.4.5",
     "dotenv-cli": "^7.4.2",
     "nodemon": "^3.1.7",
     "sqlite3": "^5.1.7"
