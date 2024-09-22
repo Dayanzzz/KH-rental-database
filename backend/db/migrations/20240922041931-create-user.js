@@ -28,16 +28,6 @@ module.exports = {
         type: Sequelize.STRING.BINARY,
         allowNull: false
       },
-      firstName: {
-        type: Sequelize.STRING(30),
-        allowNull: true,
-        unique: false
-      },
-      lastName: {
-        type: Sequelize.STRING(30),
-        allowNull: true,
-        unique: false
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
