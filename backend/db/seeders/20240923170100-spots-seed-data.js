@@ -1,6 +1,6 @@
 'use strict';
 
-const { Spot } = require('../models');
+const { Spot, User } = require('../models');
 const bcrypt = require("bcryptjs");
 
 let options = {};
@@ -9,10 +9,15 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 module.exports = {
+
+
   async up (queryInterface, Sequelize) {
+
+    const users = await User.findAll({limit: 1});
+
     await Spot.bulkCreate([
       {
-        ownerId:1,
+        ownerId: users[1].id,
         address: "123 Disney Lane",
         city: "San Francisco",
         state: "California",
@@ -24,7 +29,7 @@ module.exports = {
         price: 123
       },
       {
-        ownerId:1,
+        ownerId: users[1].id,
         address: "368 Mickey Lane",
         city: "Oakland",
         state: "California",
@@ -36,7 +41,7 @@ module.exports = {
         price: 123
       },
       {
-        ownerId:1,
+        ownerId: users[1].id,
         address: "412 Peach Lane",
         city: "Nashville",
         state: "Tennessee",
