@@ -22,8 +22,6 @@ module.exports = {
         },
         onUpdate:'CASCADE',
         onDelete:'CASCADE',
-        createdAt: Sequelize.DATE,
-        updatedAt: Sequelize.DATE
       },
       address: {
         type: Sequelize.STRING,
@@ -42,11 +40,11 @@ module.exports = {
         allowNull: false,
       },
       lat: {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.FLOAT,
         allowNull: false,
       },
       lng: {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.DOUBLE,
         allowNull: false,
       },
       name: {
