@@ -13,11 +13,11 @@ module.exports = {
 
   async up (queryInterface, Sequelize) {
 
-    const users = await User.findAll({limit: 1});
+    const users = await User.findOne({ where: {id:1}});
 
     await Spot.bulkCreate([
       {
-        ownerId: users[1].id,
+        ownerId: users.id,
         address: "123 Disney Lane",
         city: "San Francisco",
         state: "California",
@@ -29,7 +29,7 @@ module.exports = {
         price: 123
       },
       {
-        ownerId: users[1].id,
+        ownerId: users.id,
         address: "368 Mickey Lane",
         city: "Oakland",
         state: "California",
@@ -41,7 +41,7 @@ module.exports = {
         price: 123
       },
       {
-        ownerId: users[1].id,
+        ownerId: users.id,
         address: "412 Peach Lane",
         city: "Nashville",
         state: "Tennessee",
@@ -56,7 +56,7 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    // options.tableName = 'Spots';
+    options.tableName = 'Spots';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
       address: { [Op.in]: ['123 Disney Lane', '368 Mickey Lane', '412 Peach Lane'] }
