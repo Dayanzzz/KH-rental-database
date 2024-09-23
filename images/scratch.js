@@ -1,0 +1,1 @@
+npx sequelize-cli model:generate --name Spots --attributes ownerId:INTEGER,address:STRING,city:STRING,state:STRING,country:STRING,lat:DECIMAL,lng:DECIMAL,name:STRING,description:STRING,price:DECIMAL
