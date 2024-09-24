@@ -5,9 +5,31 @@ const bcrypt = require('bcryptjs');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
-const { setTokenCookie, restoreUser } = require('../../utils/auth');
+const { setTokenCookie, restoreUser,requireAuth } = require('../../utils/auth');
 const { Spot, User } = require('../../db/models');
 const router = express.Router();
+
+
+//Get all spots owned by logged in user
+router.get('/current',requireAuth, async (req, res) => {
+  console.log(req.user.dataValues.id);
+  
+  const userId = req.user.dataValues.id;
+  try {
+  const spots = await Spot.findAll({
+    where: {
+      ownerId: userId
+    }
+  })
+  res.status(200).json(spots);
+
+  } catch(error) {
+    console.error(error);
+    res.status(500).json({ error: error.message })
+  }
+})
+
+
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Get all the Spots
 
@@ -65,6 +87,7 @@ router.post('/', async (req, res) => {
         res.status(200).json(spots);
     }
   );
+
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // edit a spot 
