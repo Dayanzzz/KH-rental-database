@@ -26,5 +26,24 @@ const router = express.Router();
     }
   );
 
+//Create a Spot
+router.post('/', async (req, res) => {
+  try {
+    const {address, city, state, country, lat, lng, name, description, price, ownerId} = req.body;
 
+    if (!address || !city || !state || !country || !lat || !lng || !name || !description || !price ) {
+      return res.status(400).json({message: 'All fields are required.'});
+    }
+    const newSpot = await Spot.create({ address, city, state, country, lat, lng, name, description, price, ownerId });
+      res.status(201).json(newSpot);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error:'Internal Server Error' });
+  }
+
+
+
+
+});
   module.exports = router;
