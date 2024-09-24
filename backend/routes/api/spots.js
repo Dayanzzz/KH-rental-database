@@ -65,3 +65,24 @@ router.post('/', async (req, res) => {
 
 
   module.exports = router;
+
+
+// Delete a spot
+router.delete('/:spotId', async (req, res) => {
+  const { spotId } = req.params;
+
+  try {
+    const spotToDelete = await Spot.findByPk(spotId);
+    
+    if (!spotToDelete) {
+      return res.status(404).json({ message: 'Spot not found'});
+    }
+    await spotToDelete.destroy();
+    return res.status(200).json({ message: 'Spot deleted successfully'}); 
+  } catch (error) {
+
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error'});
+  }
+
+});
