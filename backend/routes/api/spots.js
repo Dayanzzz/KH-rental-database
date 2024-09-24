@@ -37,7 +37,7 @@ const router = express.Router();
         });
 
      if (spots.length ===0){
-      return res.status(404).json({message: 'Spot couldn"t be found'})
+      return res.status(404).json({message: "Spot couldn't be found"})
      }
         res.status(200).json(spots);
     }
