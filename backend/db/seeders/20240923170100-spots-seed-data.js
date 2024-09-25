@@ -13,7 +13,7 @@ module.exports = {
 
   async up (queryInterface, Sequelize) {
 
-    const users = await User.findOne({ where: {id:4}});
+    const users = await User.findOne({ where: {id:1}});
 
     await Spot.bulkCreate([
       {
