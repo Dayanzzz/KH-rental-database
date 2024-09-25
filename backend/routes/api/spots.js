@@ -143,7 +143,7 @@ router.delete('/:spotId', async (req, res) => {
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //Create a Review for a Spot based on Spot's id
+  //Create a REVIEW for a Spot based on Spot's id
   
   router.post('/:spotId/reviews',requireAuth, async (req, res) => {
     const { spotId } = req.params; 

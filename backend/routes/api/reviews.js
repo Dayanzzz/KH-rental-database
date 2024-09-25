@@ -96,34 +96,35 @@ router.get('/current',requireAuth, async (req, res) => {
   
   
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // edit a Review
+  // Edit a Review
   
-    router.put('/:spotId', async (req,res)=>{
-      const {spotId} = req.params;
-      const {address, city, state, country, lat, lng, name, description, price } = req.body;
+    router.put('/:reviewId', async (req,res)=>{
+      const {reviewId} = req.params;
+      const { review, stars } = req.body;
   
       const  updatedData = {};  
   
-      if (address !== undefined) updatedData.address = address;
-      if (city !== undefined) updatedData.city = city;
-      if (state !== undefined) updatedData.state = state;
-      if (country !== undefined) updatedData.country = country;
-      if (lat !== undefined) updatedData.lat = lat;
-      if (lng !== undefined) updatedData.lng = lng;
-      if (name !== undefined) updatedData.name = name;
-      if (description !== undefined) updatedData.description = description;
-      if (price !== undefined) updatedData.price = price;
+      if (review !== undefined) updatedData.review = review;
+      if (stars !== undefined) updatedData.stars = stars;
   
       if (Object.keys(updatedData).length ===0 ){
-        return res.status(400).json({message: "Bad request"});
+        return res.status(400).json({message: "Body validation errors"});
       }
-  
-      const spot = await Spot.findByPk(spotId);
-      if (!spot){
-        return res.status(404).json({message: "Spot couldn't be found"});
+
+      const reviewExists = await Review.findOne({
+        where: {
+          id: reviewId
+        }
+      });
+      
+      if (!reviewExists){
+        return res.status(404).json({message: "Couldn't find a Review with the specified id"});
       }
-      await spot.update(updatedData);
-      res.status(200).json(spot);
+
+      await Review.update(updatedData, {
+        where:{ id: reviewId }
+      });
+      res.status(200).json(reviewExists);
     });
     
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
