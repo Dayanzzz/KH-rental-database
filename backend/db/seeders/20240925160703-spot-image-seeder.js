@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
 module.exports = {
   async up (queryInterface, Sequelize) {
     
-    await SpotImage.bulkCreate([
+    await SpotImage.bulkCreate('SpotImages',[
       {
         spotId: 1,
         url: "https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
@@ -24,7 +24,7 @@ module.exports = {
         spotId: 3,
         url: "https://images.pexels.com/photos/259588/pexels-photo-259588.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
       }
-    ]);
+    ], { validate: true });
   },
 
   async down (queryInterface, Sequelize) {
