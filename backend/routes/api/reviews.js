@@ -124,19 +124,19 @@ router.get('/current',requireAuth, async (req, res) => {
     });
     
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Delete a spot
+  // Delete a Review
   
-  router.delete('/:spotId', async (req, res) => {
-    const { spotId } = req.params;
+  router.delete('/:reviewId', async (req, res) => {
+    const { reviewId } = req.params;
   
     try {
-      const spotToDelete = await Spot.findByPk(spotId);
+      const reviewToDelete = await Review.findByPk(reviewId);
       
-      if (!spotToDelete) {
-        return res.status(404).json({ message: 'Spot not found'});
+      if (!reviewToDelete) {
+        return res.status(404).json({ message: 'Review not found'});
       }
-      await spotToDelete.destroy();
-      return res.status(200).json({ message: 'Spot deleted successfully'}); 
+      await reviewToDelete.destroy();
+      return res.status(200).json({ message: 'Review deleted successfully'}); 
     } catch (error) {
   
       console.error(error);
