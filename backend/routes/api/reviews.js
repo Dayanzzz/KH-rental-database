@@ -51,28 +51,31 @@ router.get('/current',requireAuth, async (req, res) => {
         } 
       }
     );
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //Create a Spot
+// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   //Create a Review for a Spot based on Spot's id
   
-  router.post('/', async (req, res) => {
-    try {
-      const {address, city, state, country, lat, lng, name, description, price, ownerId} = req.body;
+//   router.post('/:spotId',requireAuth, async (req, res) => {
+//     const { spotId } = req.params; 
+//     const loggedInUserId = req.user.dataValues.id;
+
+//     try {
+//       const {review, stars} = req.body;
   
-      if (!address || !city || !state || !country || !lat || !lng || !name || !description || !price ) {
-        return res.status(400).json({message: 'All fields are required.'});
-      }
-      const newSpot = await Spot.create({ address, city, state, country, lat, lng, name, description, price, ownerId });
-        res.status(201).json(newSpot);
+//       if (!review || !stars ) {
+//         return res.status(400).json({message: 'All fields are required.'});
+//       }
+//       const newReview = await Review.create({ spotId, userId:loggedInUserId, review, stars});
+//         res.status(201).json(newReview);
   
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error:'Internal Server Error' });
-    }
-  
-  
+//     } catch (error) {
+//       console.error(error);
+//       res.status(500).json({ error:'Internal Server Error' });
+//     }
   
   
-  });
+  
+  
+//   });
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Get all the Spots by spotId
   
@@ -93,50 +96,51 @@ router.get('/current',requireAuth, async (req, res) => {
   
   
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // edit a spot 
+  // Edit a Review
   
-    router.put('/:spotId', async (req,res)=>{
-      const {spotId} = req.params;
-      const {address, city, state, country, lat, lng, name, description, price } = req.body;
+    router.put('/:reviewId', async (req,res)=>{
+      const {reviewId} = req.params;
+      const { review, stars } = req.body;
   
       const  updatedData = {};  
   
-      if (address !== undefined) updatedData.address = address;
-      if (city !== undefined) updatedData.city = city;
-      if (state !== undefined) updatedData.state = state;
-      if (country !== undefined) updatedData.country = country;
-      if (lat !== undefined) updatedData.lat = lat;
-      if (lng !== undefined) updatedData.lng = lng;
-      if (name !== undefined) updatedData.name = name;
-      if (description !== undefined) updatedData.description = description;
-      if (price !== undefined) updatedData.price = price;
+      if (review !== undefined) updatedData.review = review;
+      if (stars !== undefined) updatedData.stars = stars;
   
       if (Object.keys(updatedData).length ===0 ){
-        return res.status(400).json({message: "Bad request"});
+        return res.status(400).json({message: "Body validation errors"});
       }
-  
-      const spot = await Spot.findByPk(spotId);
-      if (!spot){
-        return res.status(404).json({message: "Spot couldn't be found"});
+
+      const reviewExists = await Review.findOne({
+        where: {
+          id: reviewId
+        }
+      });
+      
+      if (!reviewExists){
+        return res.status(404).json({message: "Couldn't find a Review with the specified id"});
       }
-      await spot.update(updatedData);
-      res.status(200).json(spot);
+
+      await Review.update(updatedData, {
+        where:{ id: reviewId }
+      });
+      res.status(200).json(reviewExists);
     });
     
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Delete a spot
+  // Delete a Review
   
-  router.delete('/:spotId', async (req, res) => {
-    const { spotId } = req.params;
+  router.delete('/:reviewId', async (req, res) => {
+    const { reviewId } = req.params;
   
     try {
-      const spotToDelete = await Spot.findByPk(spotId);
+      const reviewToDelete = await Review.findByPk(reviewId);
       
-      if (!spotToDelete) {
-        return res.status(404).json({ message: 'Spot not found'});
+      if (!reviewToDelete) {
+        return res.status(404).json({ message: 'Review not found'});
       }
-      await spotToDelete.destroy();
-      return res.status(200).json({ message: 'Spot deleted successfully'}); 
+      await reviewToDelete.destroy();
+      return res.status(200).json({ message: 'Review deleted successfully'}); 
     } catch (error) {
   
       console.error(error);
