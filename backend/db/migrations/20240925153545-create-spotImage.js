@@ -20,25 +20,29 @@ module.exports = {
           model: 'Spots',
           key: 'id'
         },
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
       },
       url: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      preveiw: {
+      preview: {
         type: Sequelize.BOOLEAN,
         defaultValue: false
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+
       }
-    });
+    }, options);
   },
   async down(queryInterface, Sequelize) {
     options.tableName = "SpotImages"
