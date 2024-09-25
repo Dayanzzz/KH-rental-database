@@ -18,10 +18,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey:'userId',
       as: 'user'
      });
-    //  Review.hasMany(models.ReviewImage,{
-    //   foreignKey:'reviewId',
-    //   as: 'reviewImages'
-    //  });
+     Review.hasMany(models.ReviewImage,{
+      foreignKey:'reviewId',
+      as: 'reviewImages'
+     });
     }
   }
   Review.init({
