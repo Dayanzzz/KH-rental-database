@@ -1,5 +1,5 @@
 'use strict';
-const { Spot, User, Review } = require('../models');
+const { ReviewImage } = require('../models');
 const bcrypt = require("bcryptjs");
 let options = {};
 if (process.env.NODE_ENV === 'production') {
@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkInsert('ReviewImages', [
+    await ReviewImage.bulkCreate([
       {
         reviewId:1 ,
         url: 'https://example.com/image1.jpg',
