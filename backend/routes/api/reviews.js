@@ -74,7 +74,7 @@ router.get('/current',requireAuth, async (req, res) => {
   
   });
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //Get all the Spots by spotId
+   //REMOVE FROM REVIEWS 
   
     router.get(
       '/:spotId', async (req, res) => {

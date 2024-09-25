@@ -6,7 +6,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, restoreUser,requireAuth } = require('../../utils/auth');
-const { Spot, User } = require('../../db/models');
+const { Spot, User, Review } = require('../../db/models');
 const router = express.Router();
 
 
@@ -142,5 +142,122 @@ router.delete('/:spotId', async (req, res) => {
 
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+router.get('/:spotId/reviews', async (req,res)=>{
+  const {spotId} = req.params;
+const spot = await Spot.findByPk(spotId);
+
+if (!spot){
+return res.status(404).json({message: "Spot couldn't be found"})
+}
+const reviews = await Review.findAll({
+  where:{spotId: spot.id}
+});
+
+  res.status(200).json(reviews);
+});
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 module.exports = router;
