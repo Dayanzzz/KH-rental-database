@@ -51,18 +51,21 @@ router.get('/current',requireAuth, async (req, res) => {
         } 
       }
     );
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //Create a Spot
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //Create a Review for a Spot based on Spot's id
   
-  router.post('/', async (req, res) => {
+  router.post('/:spotId',requireAuth, async (req, res) => {
+    const { spotId } = req.params; 
+    const loggedInUserId = req.user.dataValues.id;
+
     try {
-      const {address, city, state, country, lat, lng, name, description, price, ownerId} = req.body;
+      const {review, stars} = req.body;
   
-      if (!address || !city || !state || !country || !lat || !lng || !name || !description || !price ) {
+      if (!review || !stars ) {
         return res.status(400).json({message: 'All fields are required.'});
       }
-      const newSpot = await Spot.create({ address, city, state, country, lat, lng, name, description, price, ownerId });
-        res.status(201).json(newSpot);
+      const newReview = await Review.create({ spotId, userId:loggedInUserId, review, stars});
+        res.status(201).json(newReview);
   
     } catch (error) {
       console.error(error);
