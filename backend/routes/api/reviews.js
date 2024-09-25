@@ -6,25 +6,25 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, restoreUser,requireAuth } = require('../../utils/auth');
-const { Spot, User } = require('../../db/models');
+const { Review, User } = require('../../db/models');
 const router = express.Router();
 
 
 /////CHANGE EVERYTHING FOR REVIEWS////////////////
 
 
-//Get all spots owned by logged in user
+//Get all Reviews owned by logged in user
 router.get('/current',requireAuth, async (req, res) => {
     console.log(req.user.dataValues.id);
     
-    const userId = req.user.dataValues.id;
+    const loggedInUserId = req.user.dataValues.id;
     try {
-    const spots = await Spot.findAll({
+    const reviews = await Review.findAll({
       where: {
-        ownerId: userId
+        userId: loggedInUserId
       }
     })
-    res.status(200).json(spots);
+    res.status(200).json(reviews);
   
     } catch(error) {
       console.error(error);
