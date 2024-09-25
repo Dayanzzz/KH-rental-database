@@ -6,7 +6,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, restoreUser,requireAuth } = require('../../utils/auth');
-const { Spot, User } = require('../../db/models');
+const { Spot, Review, User } = require('../../db/models');
 const router = express.Router();
 
 
@@ -143,4 +143,41 @@ router.delete('/:spotId', async (req, res) => {
 });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //Create a Review for a Spot based on Spot's id
+  
+  router.post('/:spotId/reviews',requireAuth, async (req, res) => {
+    const { spotId } = req.params; 
+    const loggedInUserId = req.user.dataValues.id;
+
+    const spotExists = await Spot.findByPk(spotId);
+    if (!spotExists){
+      return res.status(404).json({message: "Spot couldn't be found"});
+    }
+
+    try {
+      const {review, stars} = req.body;
+  
+      if (!review || !stars ) {
+        return res.status(400).json({message: 'All fields are required.'});
+      }
+      const newReview = await Review.create({ spotId, userId:loggedInUserId, review, stars});
+        res.status(201).json(newReview);
+  
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error:'Internal Server Error' });
+    }
+  
+  
+  
+  
+  });
+
+
+
+
+
+
+
+
 module.exports = router;

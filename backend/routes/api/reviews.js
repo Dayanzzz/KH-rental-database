@@ -51,31 +51,31 @@ router.get('/current',requireAuth, async (req, res) => {
         } 
       }
     );
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //Create a Review for a Spot based on Spot's id
+// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   //Create a Review for a Spot based on Spot's id
   
-  router.post('/:spotId',requireAuth, async (req, res) => {
-    const { spotId } = req.params; 
-    const loggedInUserId = req.user.dataValues.id;
+//   router.post('/:spotId',requireAuth, async (req, res) => {
+//     const { spotId } = req.params; 
+//     const loggedInUserId = req.user.dataValues.id;
 
-    try {
-      const {review, stars} = req.body;
+//     try {
+//       const {review, stars} = req.body;
   
-      if (!review || !stars ) {
-        return res.status(400).json({message: 'All fields are required.'});
-      }
-      const newReview = await Review.create({ spotId, userId:loggedInUserId, review, stars});
-        res.status(201).json(newReview);
+//       if (!review || !stars ) {
+//         return res.status(400).json({message: 'All fields are required.'});
+//       }
+//       const newReview = await Review.create({ spotId, userId:loggedInUserId, review, stars});
+//         res.status(201).json(newReview);
   
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error:'Internal Server Error' });
-    }
-  
-  
+//     } catch (error) {
+//       console.error(error);
+//       res.status(500).json({ error:'Internal Server Error' });
+//     }
   
   
-  });
+  
+  
+//   });
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //Get all the Spots by spotId
   
@@ -96,7 +96,7 @@ router.get('/current',requireAuth, async (req, res) => {
   
   
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // edit a spot 
+  // edit a Review
   
     router.put('/:spotId', async (req,res)=>{
       const {spotId} = req.params;
