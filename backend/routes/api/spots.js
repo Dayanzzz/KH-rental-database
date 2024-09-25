@@ -7,6 +7,7 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, restoreUser,requireAuth } = require('../../utils/auth');
 const { Spot, Review, User } = require('../../db/models');
+const { Spot, User, Review } = require('../../db/models');
 const router = express.Router();
 
 
@@ -142,7 +143,188 @@ router.delete('/:spotId', async (req, res) => {
 
 });
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //Create a REVIEW for a Spot based on Spot's id
   
   router.post('/:spotId/reviews',requireAuth, async (req, res) => {
@@ -172,6 +354,44 @@ router.delete('/:spotId', async (req, res) => {
   
   
   });
+
+
+
+
+
+
+
+
+
+router.get('/:spotId/reviews', async (req,res)=>{
+  const {spotId} = req.params;
+const spot = await Spot.findByPk(spotId);
+
+if (!spot){
+return res.status(404).json({message: "Spot couldn't be found"})
+}
+const reviews = await Review.findAll({
+  where:{spotId: spot.id}
+});
+
+  res.status(200).json(reviews);
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////ADD AN IMAGE TO A SPOT BASED ON THE SPOT'S ID ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+// router.post('/:spotId/images', async (req,res)=>{
+//   const { spotId } = req.params;
+//   console.log(req.files)
+// })
+
+
+
+
+
+
+
+
 
 
 
