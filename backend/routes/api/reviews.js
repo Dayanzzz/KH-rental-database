@@ -6,7 +6,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, restoreUser,requireAuth } = require('../../utils/auth');
-const { Review, User } = require('../../db/models');
+const { Review, ReviewImage, User } = require('../../db/models');
 const router = express.Router();
 
 
@@ -149,6 +149,43 @@ router.get('/current',requireAuth, async (req, res) => {
   
   });
   
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //Add an IMAGE to a REVIEW based on Review's id
+  
+  router.post('/:reviewId/images',requireAuth, async (req, res) => {
+    const { reviewId } = req.params;
+    const { url } = req.body;
+    const loggedInUserId = req.user.dataValues.id;
+
+    const reviewExists = await Review.findByPk(reviewId);
+    if (!reviewExists){
+      return res.status(404).json({message: "Couldn't find a Review with the specified id"});
+    }
+
+    // find all reviewImages entries by provided review id
+    const numOfReviewImages = await ReviewImage.findAll({
+        where: {
+            reviewId:reviewId
+        }
+    })
+
+    if (numOfReviewImages.length >= 10){ // see if there are more reviewImages than allowed
+        return res.status(404).json({message: "Cannot add more than 10 images per resource"});
+    }
+    
+    try {
+      const newReviewImage = await ReviewImage.create({ reviewId, url});
+      console.log(newReviewImage);
+      
+    res.status(201).json({message: "You added a new image to the review!"});
+  
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error:'Internal Server Error' });
+    }
+  
+  });
+
   ////////////////////////////////////////////////////////////////////////////////////////
 
 
