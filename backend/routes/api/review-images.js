@@ -17,16 +17,23 @@ const router = express.Router();
 
 router.delete('/:imageId',requireAuth, async (req, res) => {
     const { imageId } = req.params;
-  
+    const loggedInUserId = req.user.dataValues.id;
+    const reviewImageToDelete = await ReviewImage.findByPk(imageId);
+    const reviewImageReview = reviewImageToDelete.dataValues.reviewId
+    reviewOwnerRecord = await Review.findByPk(reviewImageReview);
+    reviewOwnerNum = reviewOwnerRecord.dataValues.userId;
+
     try {
-      const reviewImageToDelete = await ReviewImage.findByPk(imageId);
       
       if (!reviewImageToDelete) {
-        return res.status(404).json({ message: "Couldn't find a Review Image with the specified id"});
+        return res.status(404).json({ message: "Review Image couldn't be found"});
       }
-
-      await reviewImageToDelete.destroy();
-      return res.status(200).json({ message: 'Review Image deleted successfully'}); 
+      // if loggedIn User owns the review
+      if (loggedInUserId === reviewOwnerNum) {
+        await reviewImageToDelete.destroy();
+        return res.status(200).json({ message: 'Successfully deleted'});
+      }
+      
     } catch (error) {
   
       console.error(error);

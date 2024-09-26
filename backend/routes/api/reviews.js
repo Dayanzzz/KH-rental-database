@@ -6,7 +6,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, restoreUser,requireAuth } = require('../../utils/auth');
-const { Review, ReviewImage, User } = require('../../db/models');
+const { Review, ReviewImage, Spot, User } = require('../../db/models');
 const router = express.Router();
 
 
@@ -23,8 +23,25 @@ router.get('/current',requireAuth, async (req, res) => {
       where: {
         userId: loggedInUserId
       }
-    })
-    res.status(200).json(reviews);
+    });
+
+    const spots = await Spot.findAll({
+        where: {
+            ownerId: loggedInUserId
+        }
+    });
+
+    // const spotIds = spots.id; // Get the spot ids from the spots call
+    // console.log(spotIds);
+    
+
+    const reviewImages = await Spot.findAll({
+        where: {
+            ownerId: loggedInUserId
+        }
+    });
+
+    res.status(200).json({reviews, spots, reviewImages});
   
     } catch(error) {
       console.error(error);
@@ -98,7 +115,7 @@ router.get('/current',requireAuth, async (req, res) => {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Edit a Review
   
-    router.put('/:reviewId', async (req,res)=>{
+    router.put('/:reviewId',requireAuth, async (req,res)=>{
       const {reviewId} = req.params;
       const { review, stars } = req.body;
   
@@ -124,23 +141,36 @@ router.get('/current',requireAuth, async (req, res) => {
       await Review.update(updatedData, {
         where:{ id: reviewId }
       });
-      res.status(200).json(reviewExists);
+
+      const updatedReview = await Review.findOne({
+        where: {
+            id: reviewId
+        }
+      })
+      res.status(200).json(updatedReview);
     });
     
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Delete a Review
   
-  router.delete('/:reviewId', async (req, res) => {
+  router.delete('/:reviewId',requireAuth, async (req, res) => {
     const { reviewId } = req.params;
+    const loggedInUserId = req.user.dataValues.id;
   
     try {
       const reviewToDelete = await Review.findByPk(reviewId);
-      
+      const reviewOwner = reviewToDelete.userId;  
+
       if (!reviewToDelete) {
-        return res.status(404).json({ message: 'Review not found'});
+        return res.status(404).json({ message: "Couldn't find a Review with the specified id"});
       }
-      await reviewToDelete.destroy();
-      return res.status(200).json({ message: 'Review deleted successfully'}); 
+
+      // if current logged in user id is equal to review user id
+      if (loggedInUserId === reviewToDelete.userId) {
+        await reviewToDelete.destroy();
+        return res.status(200).json({ message: 'Successfully deleted'}); 
+      }
+
     } catch (error) {
   
       console.error(error);
@@ -176,8 +206,15 @@ router.get('/current',requireAuth, async (req, res) => {
     try {
       const newReviewImage = await ReviewImage.create({ reviewId, url});
       console.log(newReviewImage);
+
+      createdImage = await ReviewImage.findOne({ 
+        attributes: ['id','url'],
+        where:{
+            url: url
+        }
+    })
       
-    res.status(201).json({message: "You added a new image to the review!"});
+    res.status(201).json(createdImage);
   
     } catch (error) {
       console.error(error);
