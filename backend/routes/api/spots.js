@@ -6,10 +6,29 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, restoreUser,requireAuth } = require('../../utils/auth');
-const { Spot, User, Review , SpotImage } = require('../../db/models');
+const { Spot, User, Review , SpotImage, ReviewImage } = require('../../db/models');
 const router = express.Router();
 
 
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Get all the Spots
+
+router.get(
+  '/', async (req, res) => {
+  try{
+
+    const spots = await Spot.findAll();
+    res.status(200).json(spots);
+
+  } catch (error) {
+
+    console.error(error);
+    res.status(500).json({message:'error'});
+
+  } 
+}
+);
 //Get all spots owned by logged in user
 router.get('/current',requireAuth, async (req, res) => {
   // console.log(req.user.dataValues.id);
@@ -29,47 +48,6 @@ router.get('/current',requireAuth, async (req, res) => {
   }
 });
 
-
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Get all the Spots
-
-  router.get(
-      '/', async (req, res) => {
-      try{
-
-        const spots = await Spot.findAll();
-        res.status(200).json(spots);
-
-      } catch (error) {
-
-        console.error(error);
-        res.status(500).json({message:'error'});
-
-      } 
-    }
-  );
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Create a Spot
-
-router.post('/', async (req, res) => {
-  try {
-    const {address, city, state, country, lat, lng, name, description, price, ownerId} = req.body;
-
-    if (!address || !city || !state || !country || !lat || !lng || !name || !description || !price ) {
-      return res.status(400).json({message: 'All fields are required.'});
-    }
-    const newSpot = await Spot.create({ address, city, state, country, lat, lng, name, description, price, ownerId });
-      res.status(201).json(newSpot);
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error:'Internal Server Error' });
-  }
-
-
-
-
-});
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //Get all the Spots by spotId
 
@@ -90,9 +68,30 @@ router.post('/', async (req, res) => {
 
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Create a Spot
+
+router.post('/', requireAuth, async (req, res) => {
+  try {
+    const {ownerId, address, city, state, country, lat, lng, name, description, price} = req.body;
+
+    if (!address || !city || !state || !country || !lat || !lng || !name || !description || !price ) {
+      return res.status(400).json({message: 'Bad Request'});
+    }
+    const newSpot = await Spot.create({ ownerId, address, city, state, country, lat, lng, name, description, price});
+      res.status(201).json(newSpot);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error:'Internal Server Error' });
+  }
+
+});
+
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // edit a spot 
 
-  router.put('/:spotId', async (req,res)=>{
+  router.put('/:spotId', requireAuth,async (req,res)=>{
     const {spotId} = req.params;
     const {address, city, state, country, lat, lng, name, description, price } = req.body;
 
@@ -123,17 +122,17 @@ router.post('/', async (req, res) => {
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Delete a spot
 
-router.delete('/:spotId', async (req, res) => {
+router.delete('/:spotId',requireAuth, async (req, res) => {
   const { spotId } = req.params;
 
   try {
     const spotToDelete = await Spot.findByPk(spotId);
     
     if (!spotToDelete) {
-      return res.status(404).json({ message: 'Spot not found'});
+      return res.status(404).json({ message: "Spot couldn't be found"});
     }
     await spotToDelete.destroy();
-    return res.status(200).json({ message: 'Spot deleted successfully'}); 
+    return res.status(200).json({ message: 'Successfully deleted'}); 
   } catch (error) {
 
     console.error(error);
@@ -159,7 +158,7 @@ router.delete('/:spotId', async (req, res) => {
       const {review, stars} = req.body;
   
       if (!review || !stars ) {
-        return res.status(400).json({message: 'All fields are required.'});
+        return res.status(400).json({message: 'Bad Request'});
       }
       const newReview = await Review.create({ spotId, userId:loggedInUserId, review, stars});
         res.status(201).json(newReview);
@@ -171,7 +170,8 @@ router.delete('/:spotId', async (req, res) => {
 
   
   });
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////GET REVIEWS BY SPOT ID ////////////////////////////////////////////////////////////////////////////////////////////////
 
 router.get('/:spotId/reviews', async (req,res)=>{
   const {spotId} = req.params;
@@ -181,16 +181,27 @@ if (!spot){
 return res.status(404).json({message: "Spot couldn't be found"})
 }
 const reviews = await Review.findAll({
-  where:{spotId: spot.id}
+  where: { spotId: spot.id },
+  include: [
+    {
+      model: User,
+      as: 'User',
+      attributes: ['id', 'firstName', 'lastName'], // Include necessary user fields
+    },
+    {
+      model: ReviewImage,
+      as:'ReviewImages',
+      attributes: ['id', 'url'], // Include necessary image fields
+    },
+  ],
 });
-
   res.status(200).json(reviews);
 });
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////ADD AN IMAGE TO A SPOT BASED ON THE SPOT'S ID ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-router.post('/:spotId/images', async (req,res)=>{
+router.post('/:spotId/images',requireAuth, async (req,res)=>{
 
   const  {spotId} = req.params;
 
