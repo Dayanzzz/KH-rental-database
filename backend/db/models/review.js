@@ -16,11 +16,11 @@ module.exports = (sequelize, DataTypes) => {
      });
      Review.belongsTo(models.User,{
       foreignKey:'userId',
-      as: 'User'
+      as: 'user'
      });
      Review.hasMany(models.ReviewImage,{
       foreignKey:'reviewId',
-      as: 'ReviewImages'
+      as: 'reviewImages'
      });
     }
   }

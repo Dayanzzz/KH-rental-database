@@ -185,12 +185,12 @@ const reviews = await Review.findAll({
   include: [
     {
       model: User,
-      as: 'User',
+      as: 'user',
       attributes: ['id', 'firstName', 'lastName'], // Include necessary user fields
     },
     {
       model: ReviewImage,
-      as:'ReviewImages',
+      as:'reviewImages',
       attributes: ['id', 'url'], // Include necessary image fields
     },
   ],
