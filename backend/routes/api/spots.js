@@ -6,7 +6,6 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, restoreUser,requireAuth } = require('../../utils/auth');
-const { Spot, Review, User } = require('../../db/models');
 const { Spot, User, Review } = require('../../db/models');
 const router = express.Router();
 
@@ -28,7 +27,7 @@ router.get('/current',requireAuth, async (req, res) => {
     console.error(error);
     res.status(500).json({ error: error.message })
   }
-})
+});
 
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -195,18 +194,6 @@ const reviews = await Review.findAll({
 //   const { spotId } = req.params;
 //   console.log(req.files)
 // })
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
