@@ -10,7 +10,7 @@ const { Review, ReviewImage, User } = require('../../db/models');
 const router = express.Router();
 
 
-/////CHANGE EVERYTHING FOR REVIEWS////////////////
+/////////////////////
 
 
 //Get all Reviews owned by logged in user
