@@ -19,8 +19,6 @@ router.get(
   '/', async (req, res) => {
     let { price, page, size, lng, lat, } = req.query;
 
-     
-    
   page = parseInt(page);
   size = parseInt(size);
 
@@ -29,12 +27,11 @@ router.get(
 
   //validate page and size
   if (page < 1 ) {
-    return res.status(400).json({message:`"page": "Page must be greater than or equal to 1"`});
+    return res.status(400).json({message:"Page must be greater than or equal to 1"});
     //ValidationError({"page": "Page must be greater than or equal to 1"});
   }
-
   if ( size < 1 ) {
-    return res.status(400).json({ message:`"size": "Size must be greater than or equal to 1"`})
+    return res.status(400).json({ message:"Size must be greater than or equal to 1"})
   }
 
   //Latitude Errors
@@ -42,10 +39,10 @@ router.get(
   let latNumToCheck = Math.floor(latNum)
 
   if ( latNumToCheck < -90 ) {
-    return res.status(400).json({ message:`"minLat": "Minimum latitude is invalid"`})
+    return res.status(400).json({ message:"Minimum latitude is invalid"})
   }
   if ( latNumToCheck > 90 ) {
-    return res.status(400).json({ message:`"maxLat": "Maximum latitude is invalid"`})
+    return res.status(400).json({ message:"Maximum latitude is invalid"})
   }
 
 //Longitude Errors
@@ -53,10 +50,10 @@ let lngNum = lng;
 let lngNumToCheck = Math.floor(lngNum)
 
 if ( lngNumToCheck < -180 ) {
-    console.log(`"minLng": "Minimum longitude is invalid"`); 
+  return res.status(400).json({ message:"Minimum longitude is invalid"})
 }
 if ( lngNumToCheck > 180 ) {
-  return res.status(400).json({ message:`"maxLng": "Maximum longitude is invalid"`})
+  return res.status(400).json({ message:"Maximum longitude is invalid"})
 }
 
 //Price Errors
@@ -64,15 +61,18 @@ minPrice = price;
 maxPrice = price;
 
 if (minPrice >= 0 ) {
-  return res.status(400).json({ message:`"minPrice": "Minimum price must be greater than or equal to 0"`})
+  return res.status(400).json({ message:"Minimum price must be greater than or equal to 0"})
 }
 if (maxPrice >= 0 ) {
-  return res.status(400).json({ message:`"maxPrice": "Maximum price must be greater than or equal to 0"`})
+  return res.status(400).json({ message:"Maximum price must be greater than or equal to 0"})
 }
   
   try{
-    const spots = await Spot.findAll();
-    res.status(200).json(spots);
+    const spots = await Spot.findAll({
+      limit: size,
+      offset: size * (page - 1)
+    });
+    res.status(200).json({spots, page});
 
   } catch (error) {
 
