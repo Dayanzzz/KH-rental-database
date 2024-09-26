@@ -6,13 +6,13 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, restoreUser,requireAuth } = require('../../utils/auth');
-const { Spot, User } = require('../../db/models');
+const { Spot, User, Review , SpotImage } = require('../../db/models');
 const router = express.Router();
 
 
 //Get all spots owned by logged in user
 router.get('/current',requireAuth, async (req, res) => {
-  console.log(req.user.dataValues.id);
+  // console.log(req.user.dataValues.id);
   
   const userId = req.user.dataValues.id;
   try {
@@ -27,7 +27,7 @@ router.get('/current',requireAuth, async (req, res) => {
     console.error(error);
     res.status(500).json({ error: error.message })
   }
-})
+});
 
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -142,5 +142,77 @@ router.delete('/:spotId', async (req, res) => {
 
 });
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //Create a REVIEW for a Spot based on Spot's id
+  
+  router.post('/:spotId/reviews',requireAuth, async (req, res) => {
+    const { spotId } = req.params; 
+    const loggedInUserId = req.user.dataValues.id;
+
+    const spotExists = await Spot.findByPk(spotId);
+    if (!spotExists){
+      return res.status(404).json({message: "Spot couldn't be found"});
+    }
+
+    try {
+      const {review, stars} = req.body;
+  
+      if (!review || !stars ) {
+        return res.status(400).json({message: 'All fields are required.'});
+      }
+      const newReview = await Review.create({ spotId, userId:loggedInUserId, review, stars});
+        res.status(201).json(newReview);
+  
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error:'Internal Server Error' });
+    }
+
+  
+  });
+
+
+router.get('/:spotId/reviews', async (req,res)=>{
+  const {spotId} = req.params;
+const spot = await Spot.findByPk(spotId);
+
+if (!spot){
+return res.status(404).json({message: "Spot couldn't be found"})
+}
+const reviews = await Review.findAll({
+  where:{spotId: spot.id}
+});
+
+  res.status(200).json(reviews);
+});
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////ADD AN IMAGE TO A SPOT BASED ON THE SPOT'S ID ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+router.post('/:spotId/images', async (req,res)=>{
+
+  const  {spotId} = req.params;
+
+  const {url, preview } = req.body; 
+
+  const spot = await Spot.findByPk(spotId);
+  if (!spot){
+    return res.status(404).json({message: "Spot couldn't be found"});
+  }
+  const image = await SpotImage.create({
+    spotId,
+    url,
+    preview
+  });
+
+return res.status(201).json({
+  id:image.id,
+  url: image.url,
+  preview: image.preview
+});
+
+})
+
+
 module.exports = router;
