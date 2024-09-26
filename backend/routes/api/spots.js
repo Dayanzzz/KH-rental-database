@@ -6,13 +6,13 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, restoreUser,requireAuth } = require('../../utils/auth');
-const { Spot, User, Review } = require('../../db/models');
+const { Spot, User, Review , SpotImage } = require('../../db/models');
 const router = express.Router();
 
 
 //Get all spots owned by logged in user
 router.get('/current',requireAuth, async (req, res) => {
-  console.log(req.user.dataValues.id);
+  // console.log(req.user.dataValues.id);
   
   const userId = req.user.dataValues.id;
   try {
@@ -190,12 +190,29 @@ const reviews = await Review.findAll({
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////ADD AN IMAGE TO A SPOT BASED ON THE SPOT'S ID ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-// router.post('/:spotId/images', async (req,res)=>{
-//   const { spotId } = req.params;
-//   console.log(req.files)
-// })
+router.post('/:spotId/images', async (req,res)=>{
 
+  const  {spotId} = req.params;
 
+  const {url, preview } = req.body; 
+
+  const spot = await Spot.findByPk(spotId);
+  if (!spot){
+    return res.status(404).json({message: "Spot couldn't be found"});
+  }
+  const image = await SpotImage.create({
+    spotId,
+    url,
+    preview
+  });
+
+return res.status(201).json({
+  id:image.id,
+  url: image.url,
+  preview: image.preview
+});
+
+})
 
 
 module.exports = router;
