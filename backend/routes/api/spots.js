@@ -10,7 +10,29 @@ const { Spot, User, Review , SpotImage, ReviewImage } = require('../../db/models
 const { now } = require('sequelize/lib/utils');
 const router = express.Router();
 
+async function getAverageRating(spotId){
+  const reviews = await Review.findAll({where:{spotId}});
+  if (reviews.length===0){
+    return 0;
+  }
+  const totalRating= reviews.reduce((sum,review)=> sum+ review.stars,0);
+  return totalRating /reviews.length;
+}
 
+async function getPreviewImage(spotId){
+  const image = await SpotImage.findOne({where:{spotId},
+  attribues:['url']});
+  if (image){
+    return image.url;
+  } else{
+    return null;
+  }
+}
+
+async function getNumReviews(spotId){
+  const reviews = await Review.findAll({where:{spotId}});
+  return reviews.length;
+}
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Get all the Spots
@@ -70,9 +92,32 @@ if (maxPrice >= 0 ) {
   try{
     const spots = await Spot.findAll({
       limit: size,
-      offset: size * (page - 1)
+      offset: size * (page - 1),
     });
-    res.status(200).json({spots, page});
+    const responseSpots = [];
+    for (const spot of spots){
+
+    const avgRating = await getAverageRating(spot.id);
+    const previewImage = await getPreviewImage(spot.id);
+    
+   responseSpots.push({ 
+    id: spot.id,
+    ownerId: spot.ownerId,
+    address: spot.address,
+    city: spot.city,
+    state: spot.state,
+    country: spot.country,
+    lat: spot.lat,
+    lng: spot.lng,
+    name: spot.name,
+    description: spot.description,
+    price: spot.price,
+    createdAt: spot.createdAt,
+    updatedAt: spot.updatedAt,
+    avgRating, 
+    previewImage});
+   }
+    res.status(200).json({Spots: responseSpots, page});
 
   } catch (error) {
 
@@ -103,20 +148,50 @@ router.get('/current',requireAuth, async (req, res) => {
 });
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //Get all the Spots by spotId
+  //Get the Spot by spotId
 
   router.get(
     '/:spotId', async (req, res) => {
       const {spotId} = req.params;
 
-        const spots = await Spot.findAll({
-          where: {id: spotId}
+        const spot = await Spot.findByPk(spotId, {
+          include:[
+            {
+              model:SpotImage,
+              as: 'spotImages',
+              attributes: {exclude:['spotId','createdAt', 'updatedAt']}
+          },
+        {
+          model: User,
+          as:'Owner',
+          attributes:{exclude:['username', 'email','hashedPassword','createdAt', 'updatedAt']}
+        }]
         });
 
-     if (spots.length ===0){
+     if (!spot){
       return res.status(404).json({message: "Spot couldn't be found"})
      }
-        res.status(200).json(spots);
+     const numReviews = await getNumReviews(spotId);
+     const avgStarRating = await getAverageRating(spotId);
+     const response = {
+      id: spot.id,
+      ownerId: spot.ownerId,
+      address: spot.address,
+      city: spot.city,
+      state: spot.state,
+      country: spot.country,
+      lat: spot.lat,
+      lng: spot.lng,
+      name: spot.name,
+      description: spot.description,
+      price: spot.price,
+      numReviews,
+      avgStarRating,
+      spotImages: spot.spotImages,
+      Owner: spot.Owner 
+    };
+
+        res.status(200).json(response);
     }
   );
 
