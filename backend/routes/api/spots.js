@@ -141,8 +141,32 @@ router.get('/current',requireAuth, async (req, res) => {
     where: {
       ownerId: userId
     }
+    
   })
-  res.status(200).json(spots);
+  const currentSpots = [];
+  for (const spot of spots){
+
+    const avgRating = await getAverageRating(spot.id);
+    const previewImage = await getPreviewImage(spot.id);
+    
+   currentSpots.push({ 
+    id: spot.id,
+    ownerId: spot.ownerId,
+    address: spot.address,
+    city: spot.city,
+    state: spot.state,
+    country: spot.country,
+    lat: spot.lat,
+    lng: spot.lng,
+    name: spot.name,
+    description: spot.description,
+    price: spot.price,
+    createdAt: spot.createdAt,
+    updatedAt: spot.updatedAt,
+    avgRating, 
+    previewImage});
+   }
+  res.status(200).json({Spots: currentSpots});
 
   } catch(error) {
     console.error(error);
@@ -166,7 +190,7 @@ router.get('/current',requireAuth, async (req, res) => {
           },
         {
           model: User,
-          as:'Owner',
+          as:'owner',
           attributes:{exclude:['username', 'email','hashedPassword','createdAt', 'updatedAt']}
         }]
         });
@@ -188,10 +212,12 @@ router.get('/current',requireAuth, async (req, res) => {
       name: spot.name,
       description: spot.description,
       price: spot.price,
+      createdAt: spot.createdAt,
+      updatedAt: spot.updatedAt,
       numReviews,
       avgStarRating,
-      spotImages: spot.spotImages,
-      Owner: spot.Owner 
+      SpotImages: spot.spotImages,
+      Owner: spot.owner 
     };
 
         res.status(200).json(response);
