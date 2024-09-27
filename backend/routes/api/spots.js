@@ -82,6 +82,7 @@ if (maxPrice >= 0 ) {
   } 
 }
 );
+
 //Get all spots owned by logged in user
 router.get('/current',requireAuth, async (req, res) => {
   // console.log(req.user.dataValues.id);
