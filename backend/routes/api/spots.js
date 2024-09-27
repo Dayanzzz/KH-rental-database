@@ -90,6 +90,9 @@ if (maxPrice >= 0 ) {
 }
   
   try{
+
+    
+
     const spots = await Spot.findAll({
       limit: size,
       offset: size * (page - 1),
@@ -201,13 +204,20 @@ router.get('/current',requireAuth, async (req, res) => {
 
 router.post('/', requireAuth, async (req, res) => {
   try {
-    const {ownerId, address, city, state, country, lat, lng, name, description, price} = req.body;
+    const userId = req.user.dataValues.id;
+
+    const {address, city, state, country, lat, lng, name, description, price} = req.body;
 
     if (!address || !city || !state || !country || !lat || !lng || !name || !description || !price ) {
       return res.status(400).json({message: 'Bad Request'});
     }
-    const newSpot = await Spot.create({ ownerId, address, city, state, country, lat, lng, name, description, price});
-      res.status(201).json(newSpot);
+
+    const createNewSpot = await Spot.create({ ownerId: userId, address, city, state, country, lat, lng, name, description, price});
+    newSpotId = createNewSpot.id;  
+
+    
+    const newSpot = await Spot.findByPk(newSpotId);
+    res.status(201).json(newSpot.dataValues);
 
   } catch (error) {
     console.error(error);
@@ -223,7 +233,7 @@ router.post('/', requireAuth, async (req, res) => {
   router.put('/:spotId', requireAuth,async (req,res)=>{
     const {spotId} = req.params;
     const {address, city, state, country, lat, lng, name, description, price } = req.body;
-
+    const loggedInUserId = req.user.dataValues.id;
     const  updatedData = {};  
 
     if (address !== undefined) updatedData.address = address;
@@ -244,8 +254,13 @@ router.post('/', requireAuth, async (req, res) => {
     if (!spot){
       return res.status(404).json({message: "Spot couldn't be found"});
     }
+    
+    // if spot's owner id is equal to loggin user
+
+    if (loggedInUserId === spot.ownerId) {
     await spot.update(updatedData);
     res.status(200).json(spot);
+    }
   });
   
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
