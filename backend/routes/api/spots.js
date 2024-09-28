@@ -368,8 +368,9 @@ return res.status(400).json({ message:"Bad Request"})
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Delete a spot
 
-router.delete('/:spotId',requireAuth, async (req, res) => {
+router.delete('/:spotId',requireAuth,handleValidationErrors, async (req, res, next) => {
   const { spotId } = req.params;
+  const loggedInUserId = req.user.dataValues.id;
 
   try {
     const spotToDelete = await Spot.findByPk(spotId);
@@ -377,8 +378,16 @@ router.delete('/:spotId',requireAuth, async (req, res) => {
     if (!spotToDelete) {
       return res.status(404).json({ message: "Spot couldn't be found"});
     }
-    await spotToDelete.destroy();
-    return res.status(200).json({ message: 'Successfully deleted'}); 
+    
+    if(loggedInUserId === spotToDelete.ownerId) {
+      await spotToDelete.destroy();
+      return res.status(200).json({ message: 'Successfully deleted'});
+    } else {
+      const err = new Error('Forbidden');
+      err.status = 403;
+      err.errors = { message: 'Body validation error' };
+      return next(err);
+    }
   } catch (error) {
 
     console.error(error);

@@ -13,19 +13,19 @@ const router = express.Router();
 /////////////////////
 
 
-//Get all Reviews owned by logged in user
+//Get all Reviews of the Current User
 router.get('/current',requireAuth, async (req, res) => {
     console.log(req.user.dataValues.id);
     
     const loggedInUserId = req.user.dataValues.id;
     try {
-    const reviews = await Review.findAll({
+    const Reviews = await Review.findAll({
       where: {
         userId: loggedInUserId
       }
     });
 
-    const spots = await Spot.findAll({
+    const Spots = await Spot.findAll({
         where: {
             ownerId: loggedInUserId
         }
@@ -35,13 +35,13 @@ router.get('/current',requireAuth, async (req, res) => {
     // console.log(spotIds);
     
 
-    const reviewImages = await Spot.findAll({
+    const ReviewImages = await Spot.findAll({
         where: {
             ownerId: loggedInUserId
         }
     });
 
-    res.status(200).json({reviews, spots, reviewImages});
+    res.status(200).json({Reviews,Spots,ReviewImages});
   
     } catch(error) {
       console.error(error);
@@ -115,12 +115,26 @@ router.get('/current',requireAuth, async (req, res) => {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Edit a Review
   
-    router.put('/:reviewId',requireAuth, async (req,res)=>{
+    router.put('/:reviewId',requireAuth,handleValidationErrors, async (req,res,next)=>{
       const {reviewId} = req.params;
       const { review, stars } = req.body;
-  
+      const loggedInUserId = req.user.dataValues.id;
       const  updatedData = {};  
   
+
+
+      //Validate user review input data
+      if (!review || review.trim() === ''|| !typeof review === 'string') {
+        return res.status(400).json({message: "Review text is required"});
+      }
+      // Validate user star input data
+      if (stars < 1 || stars > 5 || !Number.isInteger(stars)) {
+        return res.status(400).json({message: "Stars must be an integer from 1 to 5"});
+      }
+       
+
+
+      //Put Updated Data into an object
       if (review !== undefined) updatedData.review = review;
       if (stars !== undefined) updatedData.stars = stars;
   
@@ -132,28 +146,36 @@ router.get('/current',requireAuth, async (req, res) => {
         where: {
           id: reviewId
         }
-      });
-      
-      if (!reviewExists){
-        return res.status(404).json({message: "Couldn't find a Review with the specified id"});
-      }
+        });
 
-      await Review.update(updatedData, {
-        where:{ id: reviewId }
-      });
-
-      const updatedReview = await Review.findOne({
-        where: {
-            id: reviewId
+        if (!reviewExists){
+          return res.status(404).json({message: 'Review couldn\'t be found'});
         }
-      })
-      res.status(200).json(updatedReview);
+        
+        try {
+          if (loggedInUserId === reviewExists.userId) {
+            await Review.update(updatedData, {
+              where:{ id: reviewId }
+            });
+            return res.status(200).json(reviewExists);
+          }else {
+            const err = new Error('Forbidden');
+            err.status = 403;
+            err.errors = { message: 'Body validation error' };
+            return next(err);
+          }
+         } catch (error) {
+          console.error(error);
+          return res.status(500).json({ message: 'Internal server error'});
+         }
+
+
     });
     
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Delete a Review
   
-  router.delete('/:reviewId',requireAuth, async (req, res) => {
+  router.delete('/:reviewId',requireAuth,handleValidationErrors, async (req, res, next) => {
     const { reviewId } = req.params;
     const loggedInUserId = req.user.dataValues.id;
   
@@ -162,19 +184,24 @@ router.get('/current',requireAuth, async (req, res) => {
       const reviewOwner = reviewToDelete.userId;  
 
       if (!reviewToDelete) {
-        return res.status(404).json({ message: "Couldn't find a Review with the specified id"});
+        return res.status(404).json({message: 'Review couldn\'t be found'});
       }
 
       // if current logged in user id is equal to review user id
-      if (loggedInUserId === reviewToDelete.userId) {
+      if (loggedInUserId === reviewOwner) {
         await reviewToDelete.destroy();
-        return res.status(200).json({ message: 'Successfully deleted'}); 
+        return res.status(200).json({ message: 'Successfully deleted'});       
+      } else {
+        const err = new Error('Forbidden');
+        err.status = 403;
+        err.errors = { message: 'Body validation error' };
+        return next(err);
       }
 
     } catch (error) {
   
       console.error(error);
-      return res.status(500).json({ message: 'Internal server error'});
+      return res.status(404).json({ message: 'Review couldn\'t be found'});
     }
   
   });
@@ -182,14 +209,14 @@ router.get('/current',requireAuth, async (req, res) => {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //Add an IMAGE to a REVIEW based on Review's id
   
-  router.post('/:reviewId/images',requireAuth, async (req, res) => {
+  router.post('/:reviewId/images',requireAuth,handleValidationErrors, async (req, res,next) => {
     const { reviewId } = req.params;
     const { url } = req.body;
     const loggedInUserId = req.user.dataValues.id;
 
     const reviewExists = await Review.findByPk(reviewId);
     if (!reviewExists){
-      return res.status(404).json({message: "Couldn't find a Review with the specified id"});
+      return res.status(404).json({message: "Review couldn't be found"});
     }
 
     // find all reviewImages entries by provided review id
@@ -204,15 +231,26 @@ router.get('/current',requireAuth, async (req, res) => {
     }
     
     try {
-      const newReviewImage = await ReviewImage.create({ reviewId, url});
-      console.log(newReviewImage);
 
-      createdImage = await ReviewImage.findOne({ 
-        attributes: ['id','url'],
-        where:{
-            url: url
-        }
-    })
+      // Each review has a userId column
+
+      if (loggedInUserId === reviewExists.userId) {
+        const newReviewImage = await ReviewImage.create({ reviewId, url});
+        console.log(newReviewImage);
+  
+        createdImage = await ReviewImage.findOne({ 
+          attributes: ['id','url'],
+          where:{
+              url: url
+          }
+      });
+      } else {
+        const err = new Error('Forbidden');
+        err.status = 403;
+        err.errors = { message: 'Body validation error' };
+        return next(err);
+      }
+  
       
     res.status(201).json(createdImage);
   
