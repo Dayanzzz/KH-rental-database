@@ -256,11 +256,52 @@ router.post('/', requireAuth, async (req, res) => {
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // edit a spot 
 
-  router.put('/:spotId', requireAuth,async (req,res)=>{
-    const {spotId} = req.params;
-    const {address, city, state, country, lat, lng, name, description, price } = req.body;
-    const loggedInUserId = req.user.dataValues.id;
-    const  updatedData = {};  
+router.put('/:spotId', requireAuth,handleValidationErrors, async (req,res,next)=>{
+  const {spotId} = req.params;
+  const {address, city, state, country, lat, lng, name, description, price } = req.body;
+  const loggedInUserId = req.user.dataValues.id;
+  const  updatedData = {};  
+
+
+
+  const spot = await Spot.findByPk(spotId);
+  if (!spot){
+    return res.status(404).json({message: "Spot couldn't be found"});
+  }
+  
+  //field validation checks
+  if (address === undefined || city === undefined || state === undefined || country === undefined || name.length > 50 || description === undefined || price === undefined) {
+    return res.status(400).json({message: "Bad Request"});
+  };
+
+//Latitude Errors
+let latNum = lat;
+let latNumToCheck = Math.floor(latNum)
+
+if ( latNumToCheck < -90 ) {
+  return res.status(400).json({ message:"Bad Request"})
+}
+if ( latNumToCheck > 90 ) {
+  return res.status(400).json({ message:"Bad Request"})
+}
+
+//Longitude Errors
+let lngNum = lng;
+let lngNumToCheck = Math.floor(lngNum)
+
+if ( lngNumToCheck < -180 ) {
+return res.status(400).json({ message:"Bad Request"})
+}
+if ( lngNumToCheck > 180 ) {
+return res.status(400).json({ message:"Bad Request"})
+}
+
+
+
+
+  // if spot's owner id is equal to loggin user
+
+  if (loggedInUserId === spot.ownerId) {
 
     if (address !== undefined) updatedData.address = address;
     if (city !== undefined) updatedData.city = city;
@@ -273,21 +314,20 @@ router.post('/', requireAuth, async (req, res) => {
     if (price !== undefined) updatedData.price = price;
 
     if (Object.keys(updatedData).length ===0 ){
-      return res.status(400).json({message: "Bad Request"});
+      return res.status(400).json({message: "Bad request"});
     }
 
-    const spot = await Spot.findByPk(spotId);
-    if (!spot){
-      return res.status(404).json({message: "Spot couldn't be found"});
-    }
-    
-    // if spot's owner id is equal to loggin user
-
-    if (loggedInUserId === spot.ownerId) {
-    await spot.update(updatedData);
-    res.status(200).json(spot);
-    }
-  });
+  await spot.update(updatedData);
+  res.status(200).json(spot);
+  } else {
+  //trigger validation error from Handle Validation Errors midware
+  //return res.status(400).json({message: "Bad Request"});
+  const err = new Error('Forbidden');
+  err.status = 403;
+  err.errors = { message: 'Body validation error' };
+  return next(err);
+  }
+});
   
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Delete a spot
@@ -371,29 +411,43 @@ const reviews = await Review.findAll({
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////ADD AN IMAGE TO A SPOT BASED ON THE SPOT'S ID ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-router.post('/:spotId/images',requireAuth, async (req,res)=>{
+router.post('/:spotId/images',requireAuth,handleValidationErrors, async (req,res,next)=>{
 
   const  {spotId} = req.params;
-
   const {url, preview } = req.body; 
+  const loggedInUserId = req.user.dataValues.id;
 
   const spot = await Spot.findByPk(spotId);
   if (!spot){
     return res.status(404).json({message: "Spot couldn't be found"});
   }
-  const image = await SpotImage.create({
-    spotId,
-    url,
-    preview
-  });
 
-return res.status(201).json({
-  id:image.id,
-  url: image.url,
-  preview: image.preview
+//validate if the user can create an image, if they can't return an error
+
+// if spot's owner id is equal to loggin user
+
+  if (loggedInUserId === spot.ownerId) {
+    const image = await SpotImage.create({
+      spotId,
+      url,
+      preview
+    });
+
+    return res.status(201).json({
+      id:image.id,
+      url: image.url,
+      preview: image.preview
+    });
+  } else {
+    //trigger validation error from Handle Validation Errors midware
+    const err = new Error('Forbidden');
+    err.status = 403;
+    err.errors = { message: 'Body validation error' };
+    return next(err);
+  }
+
+
 });
-
-})
 
 
 module.exports = router;
