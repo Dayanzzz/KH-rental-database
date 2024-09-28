@@ -273,7 +273,7 @@ router.post('/', requireAuth, async (req, res) => {
     if (price !== undefined) updatedData.price = price;
 
     if (Object.keys(updatedData).length ===0 ){
-      return res.status(400).json({message: "Bad request"});
+      return res.status(400).json({message: "Bad Request"});
     }
 
     const spot = await Spot.findByPk(spotId);
