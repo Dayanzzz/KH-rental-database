@@ -34,7 +34,7 @@ async function getNumReviews(spotId){
   return reviews.length;
 }
 
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Get all the Spots
 
 router.get(
@@ -254,85 +254,86 @@ router.post('/', requireAuth, async (req, res) => {
 
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// edit a spot 
+// Edit a spot 
 
-router.put('/:spotId', requireAuth,handleValidationErrors, async (req,res,next)=>{
-  const {spotId} = req.params;
-  const {address, city, state, country, lat, lng, name, description, price } = req.body;
-  const loggedInUserId = req.user.dataValues.id;
-  const  updatedData = {};  
+  router.put('/:spotId', requireAuth,async (req,res)=>{
+    const {spotId} = req.params;
+    const {address, city, state, country, lat, lng, name, description, price } = req.body;
+    const loggedInUserId = req.user.dataValues.id;
+    const  updatedData = {};  
 
 
 
-  const spot = await Spot.findByPk(spotId);
-  if (!spot){
-    return res.status(404).json({message: "Spot couldn't be found"});
+    const spot = await Spot.findByPk(spotId);
+    if (!spot){
+      return res.status(404).json({message: "Spot couldn't be found"});
+    }
+    
+    //field validation checks
+    if (address === undefined || city === undefined || state === undefined || country === undefined || name.length > 50 || description === undefined || price === undefined) {
+      return res.status(400).json({message: "Bad Request"});
+    };
+
+  //Latitude Errors
+  let latNum = lat;
+  let latNumToCheck = Math.floor(latNum)
+
+  if ( latNumToCheck < -90 ) {
+    return res.status(400).json({ message:"Bad Request"})
   }
-  
-  //field validation checks
-  if (address === undefined || city === undefined || state === undefined || country === undefined || name.length > 50 || description === undefined || price === undefined) {
-    return res.status(400).json({message: "Bad Request"});
-  };
-
-//Latitude Errors
-let latNum = lat;
-let latNumToCheck = Math.floor(latNum)
-
-if ( latNumToCheck < -90 ) {
-  return res.status(400).json({ message:"Bad Request"})
-}
-if ( latNumToCheck > 90 ) {
-  return res.status(400).json({ message:"Bad Request"})
-}
+  if ( latNumToCheck > 90 ) {
+    return res.status(400).json({ message:"Bad Request"})
+  }
 
 //Longitude Errors
 let lngNum = lng;
 let lngNumToCheck = Math.floor(lngNum)
 
 if ( lngNumToCheck < -180 ) {
-return res.status(400).json({ message:"Bad Request"})
+  return res.status(400).json({ message:"Bad Request"})
 }
 if ( lngNumToCheck > 180 ) {
-return res.status(400).json({ message:"Bad Request"})
+  return res.status(400).json({ message:"Bad Request"})
 }
 
 
 
 
-  // if spot's owner id is equal to loggin user
+    // if spot's owner id is equal to loggin user
 
-  if (loggedInUserId === spot.ownerId) {
+    if (loggedInUserId === spot.ownerId) {
 
-    if (address !== undefined) updatedData.address = address;
-    if (city !== undefined) updatedData.city = city;
-    if (state !== undefined) updatedData.state = state;
-    if (country !== undefined) updatedData.country = country;
-    if (lat !== undefined) updatedData.lat = lat;
-    if (lng !== undefined) updatedData.lng = lng;
-    if (name !== undefined) updatedData.name = name;
-    if (description !== undefined) updatedData.description = description;
-    if (price !== undefined) updatedData.price = price;
+      if (address !== undefined) updatedData.address = address;
+      if (city !== undefined) updatedData.city = city;
+      if (state !== undefined) updatedData.state = state;
+      if (country !== undefined) updatedData.country = country;
+      if (lat !== undefined) updatedData.lat = lat;
+      if (lng !== undefined) updatedData.lng = lng;
+      if (name !== undefined) updatedData.name = name;
+      if (description !== undefined) updatedData.description = description;
+      if (price !== undefined) updatedData.price = price;
+  
+      if (Object.keys(updatedData).length ===0 ){
+        return res.status(400).json({message: "Bad request"});
+      }
 
-    if (Object.keys(updatedData).length ===0 ){
-      return res.status(400).json({message: "Bad request"});
+    const spot = await Spot.findByPk(spotId);
+    if (!spot){
+      return res.status(404).json({message: "Spot couldn't be found"});
     }
+    
+    // if spot's owner id is equal to loggin user
 
-  await spot.update(updatedData);
-  res.status(200).json(spot);
-  } else {
-  //trigger validation error from Handle Validation Errors midware
-  //return res.status(400).json({message: "Bad Request"});
-  const err = new Error('Forbidden');
-  err.status = 403;
-  err.errors = { message: 'Body validation error' };
-  return next(err);
-  }
-});
+    if (loggedInUserId === spot.ownerId) {
+    await spot.update(updatedData);
+    res.status(200).json(spot);
+    }
+  });
   
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Delete a spot
 
-router.delete('/:spotId',requireAuth, async (req, res) => {
+router.delete('/:spotId',requireAuth,handleValidationErrors, async (req, res, next) => {
   const { spotId } = req.params;
 
   try {
@@ -341,8 +342,10 @@ router.delete('/:spotId',requireAuth, async (req, res) => {
     if (!spotToDelete) {
       return res.status(404).json({ message: "Spot couldn't be found"});
     }
+
     await spotToDelete.destroy();
     return res.status(200).json({ message: 'Successfully deleted'}); 
+  
   } catch (error) {
 
     console.error(error);
@@ -447,7 +450,7 @@ router.post('/:spotId/images',requireAuth,handleValidationErrors, async (req,res
   }
 
 
-});
+})
 
 
 module.exports = router;
