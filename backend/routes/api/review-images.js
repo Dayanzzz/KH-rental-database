@@ -18,29 +18,29 @@ const router = express.Router();
 router.delete('/:imageId',requireAuth, async (req, res) => {
     const { imageId } = req.params;
     const loggedInUserId = req.user.dataValues.id;
-    const reviewImageToDelete = await ReviewImage.findByPk(imageId);
-    const reviewImageReview = reviewImageToDelete.dataValues.reviewId
-    reviewOwnerRecord = await Review.findByPk(reviewImageReview);
-    reviewOwnerNum = reviewOwnerRecord.dataValues.userId;
 
     try {
-      
+      const reviewImageToDelete = await ReviewImage.findByPk(imageId);
+    
+   
       if (!reviewImageToDelete) {
-        return res.status(404).json({ message: "Review Image couldn't be found"});
+        return res.status(404).json({ message: "Review Image couldn't be found" });
       }
-      // if loggedIn User owns the review
+      const reviewOwnerNum = reviewOwnerRecord.userId;
+
       if (loggedInUserId === reviewOwnerNum) {
-        await reviewImageToDelete.destroy();
-        return res.status(200).json({ message: 'Successfully deleted'});
-      }
-      
-    } catch (error) {
-  
+      await reviewImageToDelete.destroy();
+      return res.status(200).json({ message: 'Successfully deleted' });
+      }else {
+        const err = new Error('Forbidden');
+        err.status = 403;
+        err.errors = { message: 'Body validation error' };
+        return next(err);
+    } 
+  }catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Internal server error'});
+      return res.status(500).json({ message: 'Internal server error' });
     }
-  
   });
-  
 
   module.exports = router;
