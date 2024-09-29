@@ -6,11 +6,20 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
 const { setTokenCookie, restoreUser,requireAuth } = require('../../utils/auth');
-const { Review, ReviewImage, Spot, User } = require('../../db/models');
+const { Review, ReviewImage, Spot, User, SpotImage } = require('../../db/models');
 const router = express.Router();
 
 
 /////////////////////
+async function getPreviewImage(spotId){
+  const image = await SpotImage.findOne({where:{spotId},
+  attribues:['url']});
+  if (image){
+    return image.url;
+  } else{
+    return null;
+  }
+}
 
 
 //Get all Reviews of the Current User
@@ -19,35 +28,79 @@ router.get('/current',requireAuth, async (req, res) => {
     
     const loggedInUserId = req.user.dataValues.id;
     try {
-    const Reviews = await Review.findAll({
+    const reviews = await Review.findAll({
       where: {
         userId: loggedInUserId
-      }
-    });
-
-    const Spots = await Spot.findAll({
-        where: {
-            ownerId: loggedInUserId
+    },
+    include: [
+        {
+            model: User,
+            as: 'user',
+            attributes: ['id', 'firstName', 'lastName']
+        },
+        {
+            model: Spot,
+            as: 'spot',
+            attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price']
+        },
+        {
+            model: ReviewImage,
+            as: "reviewImages",
+            attributes: ['id', 'url']
         }
-    });
+    ]
+});
 
     // const spotIds = spots.id; // Get the spot ids from the spots call
     // console.log(spotIds);
     
 
-    const ReviewImages = await Spot.findAll({
-        where: {
-            ownerId: loggedInUserId
-        }
-    });
+    const formattedReviews = [];
 
-    res.status(200).json({Reviews,Spots,ReviewImages});
-  
-    } catch(error) {
-      console.error(error);
-      res.status(500).json({ error: error.message })
-    }
-  });
+   
+    for (const review of reviews) {
+      const spot = review.spot;
+        const previewImage = await getPreviewImage(spot.id); 
+
+        const formattedReview = {
+          id: review.id,
+          userId: review.userId,
+          spotId: review.spotId,
+          review: review.review,
+          stars: review.stars,
+          createdAt: review.createdAt,
+          updatedAt: review.updatedAt,
+          User: {
+              id: review.user.id, 
+              firstName: review.user.firstName,
+              lastName: review.user.lastName
+          },
+          Spot: {
+              id: spot.id,
+              ownerId: spot.ownerId,
+              address: spot.address,
+              city: spot.city,
+              state: spot.state,
+              country: spot.country,
+              lat: spot.lat,
+              lng: spot.lng,
+              name: spot.name,
+              price: spot.price,
+              previewImage: previewImage
+          },
+          ReviewImages: review.reviewImages 
+      };
+
+   
+      formattedReviews.push(formattedReview);
+  }
+
+    res.status(200).json({ Reviews: formattedReviews });
+} catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+}
+});
   
   
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

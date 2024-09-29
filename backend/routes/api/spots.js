@@ -441,17 +441,57 @@ const reviews = await Review.findAll({
     {
       model: User,
       as: 'user',
-      attributes: ['id', 'firstName', 'lastName'], // Include necessary user fields
+      attributes: ['id', 'firstName', 'lastName'], 
     },
     {
       model: ReviewImage,
       as:'reviewImages',
-      attributes: ['id', 'url'], // Include necessary image fields
+      attributes: ['id', 'url'], 
     },
   ],
 });
-  res.status(200).json(reviews);
+const formattedReviews = [];
+// reviews.forEach(review =>{
+//   formattedReviews.push({
+//     id: review.id,
+//     userId: review.userId,
+//     spotId: review.spotId,
+//     review: review.review,
+//     stars: review.stars,
+//     createdAt: review.createdAt,
+//     updatedAt: review.updatedAt,
+//     User: review.User,
+//     ReviewImages: review.ReviewImages,
+//   })
+// })
+   
+    for (const review of reviews) {
+//       const spot = review.spot;
+//         const previewImage = await getPreviewImage(spot.id); 
+
+        const formattedReview = {
+          id: review.id,
+          userId: review.userId,
+          spotId: review.spotId,
+          review: review.review,
+          stars: review.stars,
+          createdAt: review.createdAt,
+          updatedAt: review.updatedAt,
+          User: {
+              id: review.user.id, 
+              firstName: review.user.firstName,
+              lastName: review.user.lastName
+          },
+         
+          ReviewImages: review.reviewImages 
+      };
+
+   
+      formattedReviews.push(formattedReview);
+    }
+  res.status(200).json({Reviews: formattedReviews});
 });
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////ADD AN IMAGE TO A SPOT BASED ON THE SPOT'S ID ///////////////////////////////////////////////////////////////////////////////////////////////////
