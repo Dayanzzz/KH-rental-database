@@ -173,19 +173,15 @@ router.get('/current',requireAuth, async (req, res) => {
       const { review, stars } = req.body;
       const loggedInUserId = req.user.dataValues.id;
       const  updatedData = {};  
-  
+      const errors = {};
 
-
-      //Validate user review input data
-      if (!review || review.trim() === ''|| !typeof review === 'string') {
-        return res.status(400).json({message: "Review text is required"});
-      }
-      // Validate user star input data
-      if (stars < 1 || stars > 5 || !Number.isInteger(stars)) {
-        return res.status(400).json({message: "Stars must be an integer from 1 to 5"});
-      }
+      // Field validation
+      if (!review) errors.review = "Review text is required";
+      if (!stars || isNaN(stars) || stars < 1 || stars > 5) errors.stars = "Stars must be an integer from 1 to 5";
        
-
+      if (Object.keys(errors).length > 0) {
+        return res.status(400).json({ message: "Bad Request", errors });
+      }
 
       //Put Updated Data into an object
       if (review !== undefined) updatedData.review = review;
@@ -197,7 +193,7 @@ router.get('/current',requireAuth, async (req, res) => {
 
       const reviewExists = await Review.findOne({
         where: {
-          id: reviewId
+          id: Number(reviewId)
         }
         });
 
