@@ -414,8 +414,8 @@ router.delete('/:spotId',requireAuth,handleValidationErrors, async (req, res, ne
   router.post('/:spotId/reviews', requireAuth, handleValidationErrors, async (req, res) => {
     const { spotId } = req.params; 
     const loggedInUserId = req.user.dataValues.id;
-  
-  
+    
+
     const spotExists = await Spot.findByPk(spotId);
     if (!spotExists) {
       return res.status(404).json({ message: "Spot couldn't be found" });
@@ -451,7 +451,7 @@ router.delete('/:spotId',requireAuth,handleValidationErrors, async (req, res, ne
     });
   
     if (existingReview) {
-      return res.status(400).json({ message: 'User already has a review for this spot' });
+      return res.status(500).json({ message: 'User already has a review for this spot' });
     }
 
     try {
