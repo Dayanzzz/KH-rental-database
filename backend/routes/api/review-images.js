@@ -15,7 +15,7 @@ const router = express.Router();
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Delete a Review Image
 
-router.delete('/:imageId',requireAuth, async (req, res) => {
+router.delete('/:imageId',requireAuth,handleValidationErrors, async (req, res, next) => {
     const { imageId } = req.params;
     const loggedInUserId = req.user.dataValues.id;
 
