@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       }),
       Spot.hasMany(models.SpotImage, {
         foreignKey: 'spotId',
-        as: 'spotImageOwner'
+        as: 'spotImages'
       }),
           Spot.hasMany(models.Review, {
             foreignKey: 'spotId',

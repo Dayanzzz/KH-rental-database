@@ -33,21 +33,49 @@ router.post(
     '/',
     validateSignup,
     async (req, res) => {
-      const { email, password, username } = req.body;
+      const { firstName, lastName, email, password, username  } = req.body;
+      const errors = {};
+      const existingEmail = await User.findOne({where:{email}});
+      if (existingEmail){
+        errors.email = "User with that email already exists";
+        // return res.status(500).json({error: "User already exists with the specified email"});
+      }
+      const existingUsername = await User.findOne({where:{username}});
+      if (existingUsername){
+        errors.username = "User with that username already exists";
+        // return res.status(500).json({message: "User already exists", errors: {
+        //   email: "User already exists with the specified username",
+        //   username: "User with that username already exists"
+        }
+        if (Object.keys(errors).length > 0) {
+          return res.status(500).json({
+            message: "User already exists",
+            errors,
+      
+      
+      
+      });
+      }
+      // changed the above, below is old.
+      // const existingUsername = await User.findOne({where:{username}});
+      // if (existingUsername){
+      //   return res.status(500).json({error: "User already exists with the specified username"});
+      // }
+      
       const hashedPassword = bcrypt.hashSync(password);
-      const user = await User.create({ email, username, hashedPassword, firstName, lastName });
+      const user = await User.create({ firstName, lastName, email, username, hashedPassword  });
   
       const safeUser = {
         id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         username: user.username,
-        firstName: user.firstName,
-        lastName: user.lastName
       };
   
       await setTokenCookie(res, safeUser);
   
-      return res.json({
+      return res.status(201).json({
         user: safeUser
       });
     }
