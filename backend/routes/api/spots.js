@@ -37,99 +37,107 @@ async function getNumReviews(spotId){
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Get all the Spots
 
-router.get(
-  '/', async (req, res) => {
-    let { price, page, size, lng, lat, } = req.query;
+router.get('/',handleValidationErrors, async (req, res, next) => {
+  let { page = 1, size = 20, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
 
-  page = parseInt(page);
-  size = parseInt(size);
+  // Parse query parameters
+  page = parseInt(page) || 1;
+  size = parseInt(size) || 20;
 
-  if (Number.isNaN(page)) page = 1;
-  if (Number.isNaN(size)) size = 20;
+  const errors = {};
 
-  //validate page and size
-  if (page < 1 ) {
-    return res.status(400).json({message:"Page must be greater than or equal to 1"});
-    //ValidationError({"page": "Page must be greater than or equal to 1"});
+  // Validate page and size
+  if (page < 1) errors.page = "Page must be greater than or equal to 1";
+  if (size < 1) errors.size = "Size must be greater than or equal to 1";
+
+  // Latitude validation
+  if (minLat !== undefined) {
+    minLat = parseFloat(minLat);
+    if (isNaN(minLat) || minLat < -90 || minLat > 90) {
+      errors.minLat = "Minimum latitude is invalid";
+    }
   }
-  if ( size < 1 ) {
-    return res.status(400).json({ message:"Size must be greater than or equal to 1"})
-  }
-
-  //Latitude Errors
-  let latNum = lat;
-  let latNumToCheck = Math.floor(latNum)
-
-  if ( latNumToCheck < -90 ) {
-    return res.status(400).json({ message:"Minimum latitude is invalid"})
-  }
-  if ( latNumToCheck > 90 ) {
-    return res.status(400).json({ message:"Maximum latitude is invalid"})
+  if (maxLat !== undefined) {
+    maxLat = parseFloat(maxLat);
+    if (isNaN(maxLat) || maxLat < -90 || maxLat > 90) {
+      errors.maxLat = "Maximum latitude is invalid";
+    }
   }
 
-//Longitude Errors
-let lngNum = lng;
-let lngNumToCheck = Math.floor(lngNum)
+  // Longitude validation
+  if (minLng !== undefined) {
+    minLng = parseFloat(minLng);
+    if (isNaN(minLng) || minLng < -180 || minLng > 180) {
+      errors.minLng = "Minimum longitude is invalid";
+    }
+  }
+  if (maxLng !== undefined) {
+    maxLng = parseFloat(maxLng);
+    if (isNaN(maxLng) || maxLng < -180 || maxLng > 180) {
+      errors.maxLng = "Maximum longitude is invalid";
+    }
+  }
 
-if ( lngNumToCheck < -180 ) {
-  return res.status(400).json({ message:"Minimum longitude is invalid"})
-}
-if ( lngNumToCheck > 180 ) {
-  return res.status(400).json({ message:"Maximum longitude is invalid"})
-}
+  // Price validation
+  if (minPrice !== undefined) {
+    minPrice = parseFloat(minPrice);
+    if (isNaN(minPrice) || minPrice < 0) {
+      errors.minPrice = "Minimum price must be greater than or equal to 0";
+    }
+  }
+  if (maxPrice !== undefined) {
+    maxPrice = parseFloat(maxPrice);
+    if (isNaN(maxPrice) || maxPrice < 0) {
+      errors.maxPrice = "Maximum price must be greater than or equal to 0";
+    }
+  }
 
-//Price Errors
-minPrice = price;
-maxPrice = price;
+  // Return errors if any
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).json({ message: "Bad Request", errors });
+  }
 
-if (minPrice >= 0 ) {
-  return res.status(400).json({ message:"Minimum price must be greater than or equal to 0"})
-}
-if (maxPrice >= 0 ) {
-  return res.status(400).json({ message:"Maximum price must be greater than or equal to 0"})
-}
-  
-  try{
-
-    
-
+  try {
     const spots = await Spot.findAll({
       limit: size,
       offset: size * (page - 1),
     });
-    const responseSpots = [];
-    for (const spot of spots){
 
-    const avgRating = await getAverageRating(spot.id);
-    const previewImage = await getPreviewImage(spot.id);
-    
-   responseSpots.push({ 
-    id: spot.id,
-    ownerId: spot.ownerId,
-    address: spot.address,
-    city: spot.city,
-    state: spot.state,
-    country: spot.country,
-    lat: spot.lat,
-    lng: spot.lng,
-    name: spot.name,
-    description: spot.description,
-    price: spot.price,
-    createdAt: spot.createdAt,
-    updatedAt: spot.updatedAt,
-    avgRating, 
-    previewImage});
-   }
-    res.status(200).json({Spots: responseSpots, page});
+    const responseSpots = await Promise.all(spots.map(async (spot) => {
+      const avgRating = await getAverageRating(spot.id);
+      const previewImage = await getPreviewImage(spot.id);
+
+      return {
+        id: spot.id,
+        ownerId: spot.ownerId,
+        address: spot.address,
+        city: spot.city,
+        state: spot.state,
+        country: spot.country,
+        lat: spot.lat,
+        lng: spot.lng,
+        name: spot.name,
+        description: spot.description,
+        price: spot.price,
+        createdAt: spot.createdAt,
+        updatedAt: spot.updatedAt,
+        avgRating,
+        previewImage,
+      };
+    }));
+
+    // Include page and size in the response
+    res.status(200).json({
+      Spots: responseSpots,
+      page,
+      size,
+    });
 
   } catch (error) {
-
     console.error(error);
-    res.status(500).json({message:'error'});
-
-  } 
-}
-);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
 
 //Get all spots owned by logged in user
 router.get('/current',requireAuth, async (req, res) => {
