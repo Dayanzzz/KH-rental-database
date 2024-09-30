@@ -53,18 +53,17 @@ router.delete('/:imageId',requireAuth,handleValidationErrors, async (req, res, n
 
       // console.log('========End==============');
 
+      if (loggedInUserId === reviewOwnerNum) {
+      await reviewImageToDelete.destroy();
+      return res.status(200).json({ "message": "Successfully deleted"});
+      }
+
       if (loggedInUserId !== reviewOwnerNum) {
         const err = new Error('Forbidden');
         err.status = 403;
         err.errors = { message: 'Body validation error' };
         return next(err);
       } 
-
-      if (loggedInUserId === reviewOwnerNum) {
-      await reviewImageToDelete.destroy();
-      return res.status(200).json({ "message": "Successfully deleted"});
-      }
-      
 
   }catch (error) {
       console.error(error);
