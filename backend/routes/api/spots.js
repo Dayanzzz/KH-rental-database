@@ -400,31 +400,68 @@ router.delete('/:spotId',requireAuth,handleValidationErrors, async (req, res, ne
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //Create a REVIEW for a Spot based on Spot's id
   
-  router.post('/:spotId/reviews',requireAuth, async (req, res) => {
+  router.post('/:spotId/reviews', requireAuth, handleValidationErrors, async (req, res) => {
     const { spotId } = req.params; 
     const loggedInUserId = req.user.dataValues.id;
-
+  
+  
     const spotExists = await Spot.findByPk(spotId);
-    if (!spotExists){
-      return res.status(404).json({message: "Spot couldn't be found"});
+    if (!spotExists) {
+      return res.status(404).json({ message: "Spot couldn't be found" });
+    }
+  
+    const { review, stars } = req.body;
+    const errors = {};
+  
+    
+    if (!review || review.length === 0) {
+      errors.review = 'Review text is required';
+    }
+  
+ 
+    if (typeof stars !== 'number' || stars < 1 || stars > 5) {
+      errors.stars = 'Stars must be an integer from 1 to 5';
+    }
+  
+   
+    if (Object.keys(errors).length > 0) {
+      return res.status(400).json({ 
+        message: 'Bad Request', 
+        errors 
+      });
+    }
+  
+
+    const existingReview = await Review.findOne({
+      where: {
+        spotId,
+        userId: loggedInUserId
+      }
+    });
+  
+    if (existingReview) {
+      return res.status(400).json({ message: 'User already has a review for this spot' });
     }
 
     try {
-      const {review, stars} = req.body;
+      const newReview = await Review.create({ spotId, userId: loggedInUserId, review, stars });
   
-      if (!review || !stars ) {
-        return res.status(400).json({message: 'Bad Request'});
-      }
-      const newReview = await Review.create({ spotId, userId:loggedInUserId, review, stars});
-        res.status(201).json(newReview);
+      return res.status(201).json({
+        id: newReview.id,
+        spotId: newReview.spotId,
+        userId: newReview.userId,
+        review: newReview.review,
+        stars: newReview.stars,
+        createdAt: newReview.createdAt,
+        updatedAt: newReview.updatedAt,
+      });
   
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error:'Internal Server Error' });
+      return res.status(500).json({ message: 'Internal Server Error' });
     }
-
-  
   });
+  
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////GET REVIEWS BY SPOT ID ////////////////////////////////////////////////////////////////////////////////////////////////
 
