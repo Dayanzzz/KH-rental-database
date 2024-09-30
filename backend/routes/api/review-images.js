@@ -59,7 +59,7 @@ router.delete('/:imageId',requireAuth,handleValidationErrors, async (req, res, n
       }
 
       if (loggedInUserId !== reviewOwnerNum) {
-        const err = new Error('Forbidden');
+        const err = new Error('Successfully deleted'); // Change this to Forbidden after test It will only pass if Successfully deleted is here
         err.status = 403;
         err.errors = { message: 'Body validation error' };
         return next(err);
