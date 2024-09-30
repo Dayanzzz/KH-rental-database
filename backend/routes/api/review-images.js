@@ -17,36 +17,41 @@ const router = express.Router();
 
 router.delete('/:imageId',requireAuth,handleValidationErrors, async (req, res, next) => {
     const { imageId } = req.params;
-    console.log('=======================IN ROUTE HANDLER============================');
-    console.log('===========REQ.USER==================');
-    console.log(req.user);
+    // console.log('=======================IN ROUTE HANDLER============================');
+    // console.log('===========REQ.USER==================');
+    // console.log(req.user);
     
-    const loggedInUserId = req.user.dataValues.id;
     
+    //const loggedInUserId = req.user.dataValues.id;
+    const loggedInUserId = req.user?.dataValues?.id;
+  
+    // console.log('========loggedInUserId==============');
+    // console.log(loggedInUserId);
+
     try {
-      const reviewImageToDelete = await ReviewImage.findByPk(imageId);
+      
+       const reviewImageToDelete = await ReviewImage.findByPk(Number(imageId));
 
       if (!reviewImageToDelete) {
         return res.status(404).json({ message: "Review Image couldn't be found" });
       }
+      
+      
+      // console.log('========reviewImageToDelete==============');
+      // console.log(reviewImageToDelete);
 
-      const reviewOfImage = reviewImageToDelete.reviewId;
-      const findReview = await Review.findByPk(reviewOfImage);
+      const reviewOfImage = reviewImageToDelete.dataValues.reviewId;
+      const findReview = await Review.findByPk(Number(reviewOfImage));
+      const reviewOwnerNum = findReview.dataValues.userId; 
+      // console.log('=======================Find Review========================');
+      // console.log(findReview);
+      
+      
 
-      if (!findReview) {
-        return res.status(404).json({ message: "Bad Request"});
-      }
+      // console.log('========reviewOwnerNum==============');
+      // console.log(reviewOwnerNum);
 
-      const reviewOwnerNum = findReview.userId; 
-
-      console.log('========Start==============');
-      console.log('========loggedInUserId==============');
-      console.log(loggedInUserId);
-      console.log('========reviewOwnerNum==============');
-      console.log(reviewOwnerNum);
-      console.log('========reviewImageToDelete==============');
-      console.log(reviewImageToDelete);
-      console.log('========End==============');
+      // console.log('========End==============');
 
       if (loggedInUserId !== reviewOwnerNum) {
         const err = new Error('Forbidden');
