@@ -15,28 +15,57 @@ const router = express.Router();
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Delete a Review Image
 
-router.delete('/:imageId',requireAuth, async (req, res) => {
+router.delete('/:imageId',requireAuth,handleValidationErrors, async (req, res, next) => {
     const { imageId } = req.params;
-    const loggedInUserId = req.user.dataValues.id;
+    // console.log('=======================IN ROUTE HANDLER============================');
+    // console.log('===========REQ.USER==================');
+    // console.log(req.user);
+    
+    
+    //const loggedInUserId = req.user.dataValues.id;
+    const loggedInUserId = req.user?.dataValues?.id;
+  
+    // console.log('========loggedInUserId==============');
+    // console.log(loggedInUserId);
 
     try {
-      const reviewImageToDelete = await ReviewImage.findByPk(imageId);
-    
-   
+      
+       const reviewImageToDelete = await ReviewImage.findByPk(Number(imageId));
+
       if (!reviewImageToDelete) {
         return res.status(404).json({ message: "Review Image couldn't be found" });
       }
-      const reviewOwnerNum = reviewOwnerRecord.userId;
+      
+      
+      // console.log('========reviewImageToDelete==============');
+      // console.log(reviewImageToDelete);
 
-      if (loggedInUserId === reviewOwnerNum) {
-      await reviewImageToDelete.destroy();
-      return res.status(200).json({ message: 'Successfully deleted' });
-      }else {
+      const reviewOfImage = reviewImageToDelete.dataValues.reviewId;
+      const findReview = await Review.findByPk(Number(reviewOfImage));
+      const reviewOwnerNum = findReview.dataValues.userId; 
+      // console.log('=======================Find Review========================');
+      // console.log(findReview);
+      
+      
+
+      // console.log('========reviewOwnerNum==============');
+      // console.log(reviewOwnerNum);
+
+      // console.log('========End==============');
+
+      if (loggedInUserId !== reviewOwnerNum) {
         const err = new Error('Forbidden');
         err.status = 403;
         err.errors = { message: 'Body validation error' };
         return next(err);
-    } 
+      } 
+
+      if (loggedInUserId === reviewOwnerNum) {
+      await reviewImageToDelete.destroy();
+      return res.status(200).json({ "message": "Successfully deleted"});
+      }
+      
+
   }catch (error) {
       console.error(error);
       return res.status(500).json({ message: 'Internal server error' });
