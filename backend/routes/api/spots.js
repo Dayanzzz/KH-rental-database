@@ -297,64 +297,75 @@ router.put('/:spotId', requireAuth,handleValidationErrors, async (req,res,next)=
   const {address, city, state, country, lat, lng, name, description, price } = req.body;
   const loggedInUserId = req.user.dataValues.id;
   const  updatedData = {};  
+  const errors = {}; 
+
+  // Field validation
+  if (!address) errors.address = "Street address is required";
+  if (!city) errors.city = "City is required";
+  if (!state) errors.state = "State is required";
+  if (!country) errors.country = "Country is required";
+  if (!lat || isNaN(lat) || lat < -90 || lat > 90) errors.lat = "Latitude is not valid";
+  if (!lng || isNaN(lng) || lng < -180 || lng > 180) errors.lng = "Longitude is not valid";
+  if (!name || name.length > 50) errors.name = "Name must be less than 50 characters";
+  if (!description) errors.description = "Description is required";
+  if (!price || isNaN(price)) errors.price = "Price per day is required";
 
 
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).json({ message: "Bad Request", errors });
+  }
 
-  const spot = await Spot.findByPk(spotId);
+  const spot = await Spot.findByPk(Number(spotId));
   if (!spot){
     return res.status(404).json({message: "Spot couldn't be found"});
   }
-  
-  //field validation checks
-  if (address === undefined || city === undefined || state === undefined || country === undefined || name.length > 50 || description === undefined || price === undefined) {
-    return res.status(400).json({message: "Bad Request"});
-  };
 
-//Latitude Errors
-let latNum = lat;
-let latNumToCheck = Math.floor(latNum)
-
-if ( latNumToCheck < -90 ) {
-  return res.status(400).json({ message:"Bad Request"})
+//Latitude & Longitude Errors 
+let latNum = Number(lat);
+let lngNum = Number(lng);
+if (isNaN(latNum) || latNum < -90 || latNum > 90) {
+  return res.status(400).json({ message: "Bad Request" });
 }
-if ( latNumToCheck > 90 ) {
-  return res.status(400).json({ message:"Bad Request"})
+if (isNaN(lngNum) || lngNum < -180 || lngNum > 180) {
+  return res.status(400).json({ message: "Bad Request" });
 }
-
-//Longitude Errors
-let lngNum = lng;
-let lngNumToCheck = Math.floor(lngNum)
-
-if ( lngNumToCheck < -180 ) {
-return res.status(400).json({ message:"Bad Request"})
-}
-if ( lngNumToCheck > 180 ) {
-return res.status(400).json({ message:"Bad Request"})
-}
-
-
-
 
   // if spot's owner id is equal to loggin user
+  console.log('===========================USER ID=======================');
+console.log(loggedInUserId);
+console.log('===========================SPOT OWNER ID=======================');
+console.log(spot.ownerId);
 
-  if (loggedInUserId === spot.ownerId) {
 
-    if (address !== undefined) updatedData.address = address;
-    if (city !== undefined) updatedData.city = city;
-    if (state !== undefined) updatedData.state = state;
-    if (country !== undefined) updatedData.country = country;
+  if (loggedInUserId === spot.dataValues.ownerId) {
+
+    if (address) updatedData.address = address;
+    if (city) updatedData.city = city;
+    if (state) updatedData.state = state;
+    if (country) updatedData.country = country;
     if (lat !== undefined) updatedData.lat = lat;
     if (lng !== undefined) updatedData.lng = lng;
-    if (name !== undefined) updatedData.name = name;
-    if (description !== undefined) updatedData.description = description;
+    if (name) updatedData.name = name;
+    if (description) updatedData.description = description;
     if (price !== undefined) updatedData.price = price;
-
-    if (Object.keys(updatedData).length ===0 ){
+    updatedData.ownerId = spot.dataValues.ownerId;
+    updatedData.id = spot.dataValues.id;
+    
+    if (Object.keys(updatedData).length === 0 ){
       return res.status(400).json({message: "Bad request"});
     }
-
-  await spot.update(updatedData);
-  res.status(200).json(spot);
+    console.log('===========================Object.keys Length=======================');
+    console.log(Object.keys(updatedData).length);
+    
+    console.log('===========================UPDATED DATA=======================');
+    console.log(spot.ownerId);
+    console.log(updatedData);
+  updatedSpot = await spot.update(updatedData);
+  console.log('===========================UPDATED SPOT=======================');
+  console.log(updatedSpot.dataValues.id);
+  console.log(updatedSpot.dataValues.ownerId);
+  
+  res.status(200).json(updatedSpot.dataValues);
   } else {
   //trigger validation error from Handle Validation Errors midware
   //return res.status(400).json({message: "Bad Request"});
