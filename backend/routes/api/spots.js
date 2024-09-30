@@ -48,7 +48,7 @@ router.get('/',handleValidationErrors, async (req, res, next) => {
 
   // Validate page and size
   if (page < 1) errors.page = "Page must be greater than or equal to 1";
-  if (size < 1) errors.size = "Size must be greater than or equal to 1";
+  if (size < 1 || size > 20) errors.size = "Size must be between 1 and 20";
 
   // Latitude validation
   if (minLat !== undefined) {
@@ -94,7 +94,10 @@ router.get('/',handleValidationErrors, async (req, res, next) => {
 
   // Return errors if any
   if (Object.keys(errors).length > 0) {
-    return res.status(400).json({ message: "Bad Request", errors });
+    return res.status(400).json({ 
+      message: "Bad Request", 
+      errors 
+    });
   }
 
   try {
@@ -102,6 +105,13 @@ router.get('/',handleValidationErrors, async (req, res, next) => {
       limit: size,
       offset: size * (page - 1),
     });
+    
+    if (!spots) {
+      const err = new Error("Bad Request");
+      err.status = 400;
+      err.errors = { message: "Bad Request" };
+      return next(err);
+    }
 
     const responseSpots = await Promise.all(spots.map(async (spot) => {
       const avgRating = await getAverageRating(spot.id);
