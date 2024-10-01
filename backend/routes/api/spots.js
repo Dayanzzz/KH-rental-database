@@ -135,6 +135,8 @@ router.get('/',handleValidationErrors, async (req, res, next) => {
     const responseSpots = await Promise.all(spots.map(async (spot) => {
       const avgRating = await getAverageRating(spot.id);
       const previewImage = await getPreviewImage(spot.id);
+      console.log(spot.price);
+      
 
       return {
         id: spot.id,
@@ -147,7 +149,7 @@ router.get('/',handleValidationErrors, async (req, res, next) => {
         lng: spot.lng,
         name: spot.name,
         description: spot.description,
-        price: spot.price,
+        price: Number(spot.price),
         createdAt: spot.createdAt,
         updatedAt: spot.updatedAt,
         avgRating,
