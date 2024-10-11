@@ -370,10 +370,10 @@ if (isNaN(lngNum) || lngNum < -180 || lngNum > 180) {
 }
 
   // if spot's owner id is equal to loggin user
-  console.log('===========================USER ID=======================');
-console.log(loggedInUserId);
-console.log('===========================SPOT OWNER ID=======================');
-console.log(spot.ownerId);
+//   console.log('===========================USER ID=======================');
+// console.log(loggedInUserId);
+// console.log('===========================SPOT OWNER ID=======================');
+// console.log(spot.ownerId);
 
 
   if (loggedInUserId === spot.dataValues.ownerId) {
@@ -393,16 +393,16 @@ console.log(spot.ownerId);
     if (Object.keys(updatedData).length === 0 ){
       return res.status(400).json({message: "Bad request"});
     }
-    console.log('===========================Object.keys Length=======================');
-    console.log(Object.keys(updatedData).length);
+    // console.log('===========================Object.keys Length=======================');
+    // console.log(Object.keys(updatedData).length);
     
-    console.log('===========================UPDATED DATA=======================');
-    console.log(spot.ownerId);
-    console.log(updatedData);
+    // console.log('===========================UPDATED DATA=======================');
+    // console.log(spot.ownerId);
+    // console.log(updatedData);
   updatedSpot = await spot.update(updatedData);
-  console.log('===========================UPDATED SPOT=======================');
-  console.log(updatedSpot.dataValues.id);
-  console.log(updatedSpot.dataValues.ownerId);
+  // console.log('===========================UPDATED SPOT=======================');
+  // console.log(updatedSpot.dataValues.id);
+  // console.log(updatedSpot.dataValues.ownerId);
   
   res.status(200).json(updatedSpot.dataValues);
   } else {
