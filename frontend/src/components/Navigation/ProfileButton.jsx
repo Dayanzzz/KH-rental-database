@@ -5,6 +5,9 @@ import { useDispatch } from 'react-redux';
 import { CiAvocado } from "react-icons/ci";
 
 import * as sessionActions from '../../store/session';
+import OpenModalButton from '../OpenModalButton/OpenModalButton';
+import LoginFormModal from '../LoginFormModal/LoginFormModal';
+import SignupFormModal from '../SignupFormModal/SignupFormModal';
 
 function ProfileButton({ user }) {
     const dispatch = useDispatch();
@@ -39,20 +42,38 @@ function ProfileButton({ user }) {
     const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
   
     return (
-      <>
+        <>
         <button onClick={toggleMenu}>
           <CiAvocado />
         </button>
         <ul className={ulClassName} ref={ulRef}>
-          <li>{user.username}</li>
-          <li>{user.firstName} {user.lastName}</li>
-          <li>{user.email}</li>
-          <li>
-            <button onClick={logout}>Log Out</button>
-          </li>
+          {user ? (
+            <>
+              <li>{user.username}</li>
+              <li>{user.firstName} {user.lastName}</li>
+              <li>{user.email}</li>
+              <li>
+                <button onClick={logout}>Log Out</button>
+              </li>
+            </>
+          ) : (
+            <>
+              <li>
+                <OpenModalButton
+                  buttonText="Log In"
+                  modalComponent={<LoginFormModal />}
+                />
+              </li>
+              <li>
+                <OpenModalButton
+                  buttonText="Sign Up"
+                  modalComponent={<SignupFormModal />}
+                />
+              </li>
+            </>
+          )}
         </ul>
       </>
     );
   }
-  
   export default ProfileButton;
