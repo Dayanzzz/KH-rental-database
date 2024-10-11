@@ -6,6 +6,7 @@ import { CiAvocado } from "react-icons/ci";
 
 import * as sessionActions from '../../store/session';
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
+// import OpenModalMenuItem from './OpenModalMenuItem'; to change button form to text form but still have button functionality 
 import LoginFormModal from '../LoginFormModal/LoginFormModal';
 import SignupFormModal from '../SignupFormModal/SignupFormModal';
 
@@ -68,11 +69,16 @@ function ProfileButton({ user }) {
                   />
                 </li>
                 <li>
-                  <OpenModalButton
-                    buttonText="Sign Up"
-                    onButtonClick={closeMenu}
-                    modalComponent={<SignupFormModal />}
-                  />
+                <OpenModalButton
+                buttonText="Sign Up"
+                onButtonClick={closeMenu}
+                modalComponent={<SignupFormModal />}
+              />
+                {/* <OpenModalMenuItem
+              itemText="Sign Up"
+              onItemClick={closeMenu}
+              modalComponent={<SignupFormModal />}
+                  /> */}
                 </li>
               </>
             )}
