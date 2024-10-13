@@ -1,0 +1,25 @@
+.column {
+    float: left;
+    width: 30%;
+    margin:10px;
+  }
+  
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  .imgLayout{
+    width:100%;
+    
+  }
+  .spotGridHeader{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .spotGridDetails p{
+text-align: left;
+  }
