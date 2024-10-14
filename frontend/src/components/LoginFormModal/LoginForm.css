@@ -32,7 +32,7 @@ h1 {
   }
   
   button {
-    margin-top: 1rem;
+    
     padding: 0.5rem 1rem;
     font-size: 1rem;
     color: white;
@@ -47,6 +47,6 @@ h1 {
   }
   
   p {
-    color: red;
+    color: blue;
     text-align: center;
   }

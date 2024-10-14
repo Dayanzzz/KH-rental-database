@@ -5,7 +5,7 @@ ul {
     margin: 0;
     display: flex;
     justify-content: space-between; /* Space items evenly */
-    background-color: #95dd97; /* Navbar background color */
+    background-color: white; /* Navbar background color */
     padding: 10px 20px; /* Padding for the navbar */
   }
   
@@ -13,21 +13,22 @@ ul {
     margin: 0 15px; /* Space between list items */
   }
   
-  a, button {
+  button {
     text-decoration: none; /* Remove underline from links */
-    color: white; /* Link text color */
+    color: rgb(35, 53, 191); /* Link text color */
     font-weight: bold; /* Make text bold */
     padding: 8px 12px; /* Padding for clickable areas */
-    border: none; /* Remove default button border */
+    border: 1px solid blue; /* Remove default button border */
     background: none; /* Remove button background */
     cursor: pointer; /* Change cursor to pointer */
     transition: background-color 0.3s; /* Smooth background color change */
   }
   
-  a:hover, button:hover {
-    background-color: rgba(255, 255, 255, 0.2); /* Lighten background on hover */
-    border-radius: 4px; /* Rounded corners */
-  }
+
   .hidden {
     display: none;
+  }
+
+  .logo img{
+   width: 40px;
   }

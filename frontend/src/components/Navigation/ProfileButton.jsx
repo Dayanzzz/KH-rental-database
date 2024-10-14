@@ -2,7 +2,7 @@
 
 import { useState, useEffect , useRef} from 'react';
 import { useDispatch } from 'react-redux';
-import { CiAvocado } from "react-icons/ci";
+import { GiHeartKey } from "react-icons/gi";
 
 import * as sessionActions from '../../store/session';
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
@@ -47,7 +47,7 @@ function ProfileButton({ user }) {
       return (
         <>
           <button onClick={toggleMenu}>
-            <CiAvocado />
+            <GiHeartKey />
           </button>
           <ul className={ulClassName} ref={ulRef}>
             {user ? (
