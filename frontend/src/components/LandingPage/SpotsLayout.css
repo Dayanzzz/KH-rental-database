@@ -1,7 +1,28 @@
+/* Show pointer cursor for clickable elements */
+.logo,   /* Assuming you have a class for your logo */
+.button, /* Assuming you have a class for your buttons */
+.column  /* Assuming this is your class for spot tiles */
+{
+    cursor: pointer; /* Changes the cursor to a pointer */
+}
+
+/* Optional: You can also add hover effects for better UX */
+.logo:hover,
+.button:hover,
+.column:hover {
+    opacity: 0.9; /* Slightly dim the element on hover */
+    transform: scale(1.02); /* Slightly increase size on hover */
+    transition: all 0.3s ease; /* Smooth transition */
+}
+
+
+
+
+
 .column {
     float: left;
-    width: 30%;
-    margin:10px;
+    width: 23%;
+    margin:18px;
   }
   
   /* Clear floats after the columns */
@@ -20,6 +41,58 @@
     justify-content: space-between;
     align-items: center;
   }
+  .star{ 
+    margin-right:10px;
+  }
   .spotGridDetails p{
 text-align: left;
   }
+
+
+  .spotTile {
+    position: relative; /* Needed for the tooltip */
+    cursor: pointer; /* Show pointer cursor */
+}
+
+.tooltip {
+    visibility: hidden; /* Hide by default */
+    width: 120px; /* Width of the tooltip */
+    background-color: rgba(0, 0, 0, 0.7); /* Dark background */
+    color: #fff; /* White text */
+    text-align: center; /* Center the text */
+    border-radius: 5px; /* Rounded corners */
+    padding: 5px; /* Padding */
+    position: absolute; /* Position tooltip relative to parent */
+    z-index: 1; /* Stack above other elements */
+    bottom: 100%; /* Position above the tile */
+    left: 50%; /* Center horizontally */
+    margin-left: -60px; /* Adjust for centering */
+    opacity: 0; /* Start invisible */
+    transition: opacity 0.3s; /* Fade effect */
+}
+
+.spotTile:hover .tooltip {
+    visibility: visible; /* Show on hover */
+    opacity: 1; /* Fade in */
+}
+
+
+
+
+
+
+
+  /* .row {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+  /* }
+  
+  .column {
+    flex: 1 0 21%; /* Take up roughly 21% of the row (4 columns fit in 100%) */
+    /* margin: 10px; /* Add some spacing between columns */
+  /* } */
+  
+  /* .imgLayout {
+    width: 100%; /* Make the image fill the column */
+    /* height: auto; /* Maintain aspect ratio */
+  /* } */ 

@@ -9,8 +9,9 @@ function Navigation({ isLoaded }) {
 
   return (
     <ul>
-      <li>
+      <li className ="siteLogo">
       <NavLink to="/"className = "logo"><img className = "logo" src = {logoo} alt=""/></NavLink>
+      <span className="logo-text">Destiny Lodgings</span>
         {/* <NavLink to="/">Home</NavLink> */}
       </li>
       {isLoaded && (
