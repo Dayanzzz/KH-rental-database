@@ -7,6 +7,19 @@ import {useModal} from '../../context/Modal';
 import './LoginForm.css';
 
 function LoginFormModal() {
+//DEMO USER CAN POSSIBLY TAKE OUT 
+  const handleDemoLogin = () => {
+    const demoCredentials = {
+        username: 'demoUser',
+        password: 'demoPassword'
+    };
+    login(demoCredentials.username, demoCredentials.password);
+};
+const login = (username, password) => {
+  console.log(`Logging in with: ${username}, ${password}`);
+  alert(`Logged in as ${username}`);
+};
+///////////////////////////////////////////////////
   const dispatch = useDispatch();
   const [credential, setCredential] = useState("");
   const [password, setPassword] = useState("");
@@ -29,7 +42,7 @@ function LoginFormModal() {
   return (
     <>
       <h1>Log In</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} >
         <label>
           <input
             type="text"
@@ -54,7 +67,15 @@ function LoginFormModal() {
         )}
         <button type="submit">Log In</button>
       </form>
-      
+
+
+
+      {/* DEMOUSER */}
+      <div className="demo-link-container">
+                <span className="demo-link" onClick={handleDemoLogin}>
+                    Demo User
+                </span>
+            </div>
     </>
   );
 }

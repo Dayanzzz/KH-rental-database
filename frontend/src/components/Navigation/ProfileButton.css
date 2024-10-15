@@ -1,0 +1,25 @@
+.profile-dropdown {
+    
+   
+    margin: 0; /* Remove default margin */
+    display: flex; /* Change to flex for vertical stacking */
+    flex-direction: column; /* Stack items vertically */
+    position: absolute; /* Position the dropdown relative to the button */
+    background-color: white; /* Set background color */
+    border: 1px solid #ccc; /* Add border for visibility */
+    z-index: 10; /* Ensure it appears above other elements */
+    min-width: 150px; /* Set a minimum width */
+    max-width: 200px; /* Set a maximum width */
+ 
+    right: 0; /* Align to the right *//* Set a minimum width for consistency */
+  }
+  
+  .profile-dropdown li {
+    padding: 10px; /* Add padding for better spacing */
+    cursor: pointer; /* Change cursor to pointer for better UX */
+  }
+  
+  .profile-dropdown li:hover {
+    background-color: #f0f0f0; /* Change background on hover */
+  }
+  

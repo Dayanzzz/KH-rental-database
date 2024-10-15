@@ -45,3 +45,12 @@ ul {
     font-family: cursive; /* Change 'YourFontName' to the font you chose */
     color: #000080;
   }
+  .create-spot-link {
+    margin-right: 20px; /* Space between create link and profile button */
+    text-decoration: none; /* Remove underline */
+    color: #000080; /* Link color */
+  }
+  
+  .create-spot-link:hover {
+    text-decoration: underline; /* Underline on hover */
+  }

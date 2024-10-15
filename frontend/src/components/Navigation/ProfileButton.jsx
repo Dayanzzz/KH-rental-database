@@ -3,6 +3,7 @@
 import { useState, useEffect , useRef} from 'react';
 import { useDispatch } from 'react-redux';
 import { GiHeartKey } from "react-icons/gi";
+import './ProfileButton.css';
 
 import * as sessionActions from '../../store/session';
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
@@ -52,39 +53,42 @@ function ProfileButton({ user }) {
           <ul className={ulClassName} ref={ulRef}>
             {user ? (
               <>
-                <li>{user.username}</li>
+                <li>Greetings, {user.username}! </li>
                 <li>{user.firstName} {user.lastName}</li>
                 <li>{user.email}</li>
                 <li>
-                  <button onClick={logout}>Log Out</button>
-                </li>
-              </>
-            ) : (
-              <>
-                <li>
-                  <OpenModalButton
-                    buttonText="Log In"
-                    onButtonClick={closeMenu}
-                    modalComponent={<LoginFormModal />}
-                  />
-                </li>
-                <li>
-                <OpenModalButton
+                {/* <button onClick={handleManageSpots}>Manage Spots</button> */}
+                <span 
+        style={{ textDecoration: 'underline', cursor: 'pointer', color: 'black' }} 
+            onClick={() => console.log('Manage Spots clicked')}>
+                   Manage Spots
+                </span>
+            </li>
+            <li>
+              <button onClick={logout}>Log Out</button>
+            </li>
+          </>
+        ) : (
+          <>
+            <li>
+              <OpenModalButton
+                buttonText="Log In"
+                onButtonClick={closeMenu}
+                modalComponent={<LoginFormModal />}
+              />
+            </li>
+            <li>
+              <OpenModalButton
                 buttonText="Sign Up"
                 onButtonClick={closeMenu}
                 modalComponent={<SignupFormModal />}
               />
-                {/* <OpenModalMenuItem
-              itemText="Sign Up"
-              onItemClick={closeMenu}
-              modalComponent={<SignupFormModal />}
-                  /> */}
-                </li>
-              </>
-            )}
-          </ul>
-        </>
-      );
-    }
-    
-    export default ProfileButton;
+            </li>
+          </>
+        )}
+      </ul>
+    </>
+  );
+}
+
+export default ProfileButton;
