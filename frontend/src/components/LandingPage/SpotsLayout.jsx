@@ -1,11 +1,12 @@
 //  import './SpotsLayout.css';
 //  import aladin from '../images/aladin.jpg';
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSpots } from '../../store/spots'; // Adjust the path as necessary
 import './SpotsLayout.css';
 import aladin from '../images/aladin.jpg'; // Consider using dynamic images if available
+import { NavLink } from 'react-router-dom';
 
 function SpotsLayout() {
     const dispatch = useDispatch();
@@ -22,17 +23,17 @@ function SpotsLayout() {
             <div className="row">
                 {spots.map(spot => (
                     <div className="column" key={spot.id}>
-                        <div className="spotTile">
-                            <img className="imgLayout" src={aladin} alt="Spot" />
+                        <NavLink to={`/spots/${spot.id}`} className="spotTile"> {/* Add NavLink here */}
+                            <img className="imgLayout" src={aladin} alt={spot.name} />
                             <div className="tooltip">{spot.name}</div>
                             <div className="spotGridHeader">
                                 <div className="location">{spot.city}, {spot.state}</div>
                                 <div className="star">{starEmoji} {spot.starRating}</div> {/* Assuming you have a starRating field */}
                             </div>
                             <div className="spotGridDetails">
-                                <p>${spot.price}/night</p>
+                                <p>${spot.price} night</p>
                             </div>
-                        </div>
+                        </NavLink>
                     </div>
                 ))}
             </div>
@@ -41,8 +42,6 @@ function SpotsLayout() {
 }
 
 export default SpotsLayout;
-
-
 
 
 
