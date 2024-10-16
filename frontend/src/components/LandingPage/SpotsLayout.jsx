@@ -5,7 +5,6 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSpots } from '../../store/spots'; // Adjust the path as necessary
 import './SpotsLayout.css';
-import aladin from '../images/aladin.jpg'; // Consider using dynamic images if available
 import { NavLink } from 'react-router-dom';
 
 function SpotsLayout() {
@@ -21,10 +20,10 @@ function SpotsLayout() {
     return (
         <>
             <div className="row">
-                {spots.map(spot => (
+                {spots.map(spot =>  (
                     <div className="column" key={spot.id}>
                         <NavLink to={`/spots/${spot.id}`} className="spotTile"> {/* Add NavLink here */}
-                            <img className="imgLayout" src={aladin} alt={spot.name} />
+                            <img className="imgLayout" src={spot.previewImage[0]} alt={spot.name} />
                             <div className="tooltip">{spot.name}</div>
                             <div className="spotGridHeader">
                                 <div className="location">{spot.city}, {spot.state}</div>
@@ -35,7 +34,8 @@ function SpotsLayout() {
                             </div>
                         </NavLink>
                     </div>
-                ))}
+                )
+  )}
             </div>
         </>
     );
@@ -45,6 +45,7 @@ export default SpotsLayout;
 
 
 
+//{console.log('Rendering image for spot:', spot.name, 'URL:', spot.previewImage);
 
 
 

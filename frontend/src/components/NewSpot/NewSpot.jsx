@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './NewSpot.css'; // Ensure to import your CSS
 
 function NewSpot() {
