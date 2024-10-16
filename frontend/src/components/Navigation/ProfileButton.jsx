@@ -4,7 +4,7 @@ import { useState, useEffect , useRef} from 'react';
 import { useDispatch } from 'react-redux';
 import { GiHeartKey } from "react-icons/gi";
 import './ProfileButton.css';
-
+import { NavLink } from 'react-router-dom';
 import * as sessionActions from '../../store/session';
 import OpenModalButton from '../OpenModalButton/OpenModalButton';
 // import OpenModalMenuItem from './OpenModalMenuItem'; to change button form to text form but still have button functionality 
@@ -57,12 +57,9 @@ function ProfileButton({ user }) {
                 <li>{user.firstName} {user.lastName}</li>
                 <li>{user.email}</li>
                 <li>
+                    <NavLink to="/spots/current" onClick={closeMenu}>Manage Spots</NavLink>
                 {/* <button onClick={handleManageSpots}>Manage Spots</button> */}
-                <span 
-        style={{ textDecoration: 'underline', cursor: 'pointer', color: 'black' }} 
-            onClick={() => console.log('Manage Spots clicked')}>
-                   Manage Spots
-                </span>
+             
             </li>
             <li>
               <button onClick={logout}>Log Out</button>
