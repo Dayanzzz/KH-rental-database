@@ -42,6 +42,7 @@ app.use(
     })
 );
 
+
 //ENDPOINTS GOES BELOW THIS:
 
 app.use(routes);

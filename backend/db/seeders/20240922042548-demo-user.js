@@ -13,26 +13,62 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     await User.bulkCreate([
       {
-        email: 'demo@user.io',
-        username: 'Demo-lition',
-        firstName: 'Explosion',
-        lastName: 'Derby',
-        hashedPassword: bcrypt.hashSync('password')
+        email: 'mickey@kingdomhearts.com',
+        username: 'MickeyMouse',
+        firstName: 'Mickey',
+        lastName: 'Mouse',
+        hashedPassword: bcrypt.hashSync('passwordMickey')
       },
       {
-        email: 'user1@user.io',
-        username: 'FakeUser1',
-        firstName: 'Rapscallion',
-        lastName: 'Onney',
-        hashedPassword: bcrypt.hashSync('password2')
+        email: 'sora@kingdomhearts.com',
+        username: 'Sora',
+        firstName: 'Sora',
+        lastName: 'Frost',
+        hashedPassword: bcrypt.hashSync('passwordSora')
       },
       {
-        email: 'user2@user.io',
-        username: 'FakeUser2',
-        firstName: 'TwoFake',
-        lastName: 'FakeDerby',
-        hashedPassword: bcrypt.hashSync('password3')
-      }
+        email: 'chip@kingdomhearts.com',
+        username: 'Chip',
+        firstName: 'Chip',
+        lastName: 'Potts',
+        hashedPassword: bcrypt.hashSync('passwordChip')
+      },
+      {
+        email: 'dale@kingdomhearts.com',
+        username: 'Dale',
+        firstName: 'Dale',
+        lastName: 'Potts',
+        hashedPassword: bcrypt.hashSync('passwordDale')
+      },
+      {
+        email: 'roxas@kingdomhearts.com',
+        username: 'Roxas',
+        firstName: 'Roxas',
+        lastName: 'Unknown',
+        hashedPassword: bcrypt.hashSync('passwordRoxas')
+      },
+      {
+        email: 'kairi@kingdomhearts.com',
+        username: 'Kairi',
+        firstName: 'Kairi',
+        lastName: 'Destiny',
+        hashedPassword: bcrypt.hashSync('kairi123')
+      },
+      {
+        email: 'riku@kingdomhearts.com',
+        username: 'Riku',
+        firstName: 'Riku',
+        lastName: 'Shadows',
+        hashedPassword: bcrypt.hashSync('riku123')
+      },
+      {
+        email: 'aqua@kingdomhearts.com',
+        username: 'Aqua',
+        firstName: 'Aqua',
+        lastName: 'Warrior',
+        hashedPassword: bcrypt.hashSync('aqua123')
+      },
+
     ], { validate: true });
   },
 
@@ -40,7 +76,7 @@ module.exports = {
     options.tableName = 'Users';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      username: { [Op.in]: ['Demo-lition', 'FakeUser1', 'FakeUser2'] }
+      username: { [Op.in]: ['MickeyMouse', 'Sora', 'Chip', 'Dale', 'Roxas', 'Kairi', 'Riku', 'Aqua'] }
     }, {});
   }
 };

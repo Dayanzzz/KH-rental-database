@@ -12,15 +12,61 @@ module.exports = {
     await SpotImage.bulkCreate([
       {
         spotId: 1,
-        url: "https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        url: "/images/1bathroom.jpg",
+        preview:true
       },
       {
         spotId: 2,
-        url: "https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        url: "/images/1bed.jpg",
+        preview:true
       },
       {
         spotId: 3,
-        url: "https://images.pexels.com/photos/259588/pexels-photo-259588.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+        url: "/images/1front.jpg",
+        preview:true
+      },
+      {
+        spotId: 4,
+        url: "/images/1bathroom.jpg",
+        preview:true
+      },
+      {
+        spotId: 5,
+        url: "/images/1bed.jpg",
+        preview:true
+      },
+      {
+        spotId: 6,
+        url: "/images/1front.jpg",
+        preview:true
+      },{
+        spotId: 7,
+        url: "/images/1bathroom.jpg",
+        preview:true
+      },
+      {
+        spotId: 8,
+        url: "/images/1bed.jpg",
+        preview:true
+      },
+      {
+        spotId: 9,
+        url: "/images/1front.jpg",
+        preview:true
+      },{
+        spotId: 10,
+        url: "/images/1bathroom.jpg",
+        preview:true
+      },
+      {
+        spotId: 11,
+        url: "/images/1bed.jpg",
+        preview:true
+      },
+      {
+        spotId: 12,
+        url: "/images/1front.jpg",
+        preview:true
       }
     ], { validate: true });
   },
@@ -31,9 +77,9 @@ module.exports = {
     return queryInterface.bulkDelete(options, {
       url: {
         [Op.in]: [
-          "https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", 
-          "https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", 
-          "https://images.pexels.com/photos/259588/pexels-photo-259588.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+          "/images/1bathroom.jpg", 
+          "/images/1front.jpg", 
+           "/images/1bed.jpg"
         ]
       }
     }, {});

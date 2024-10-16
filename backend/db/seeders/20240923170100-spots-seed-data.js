@@ -13,45 +13,153 @@ module.exports = {
 
   async up (queryInterface, Sequelize) {
 
-    const users = await User.findOne({ where: {id:1}});
-
+    // const users = await User.findOne({ where: {id:1}});
+    const users = await User.findAll();
     await Spot.bulkCreate([
       {
-        ownerId: users.id,
-        address: "123 Disney Lane",
-        city: "San Francisco",
-        state: "California",
-        country: "United States of America",
-        lat: 37.7645358,
-        lng: -333.4730327,
-        name: "App Academy",
-        description: "Place where web developers are created",
-        price: 123
+        ownerId: users[Math.floor(Math.random() * users.length)].id,
+        address: "1 Destiny Islands Way",
+        city: "Kailua-Kona",
+        state: "Hawaii",
+        country: "USA",
+        lat: 19.6406,
+        lng: -155.9711,
+        name: "Tropical Paradise Retreat",
+        description: "A cozy beachfront bungalow on the beautiful shores of Kailua-Kona, perfect for relaxing and soaking in the sun.",
+        price: 200
       },
       {
-        ownerId: users.id,
-        address: "368 Mickey Lane",
-        city: "Oakland",
-        state: "California",
-        country: "United States of America",
-        lat: 27.7645358,
-        lng: -222.4730327,
-        name: "App Academy",
-        description: "Place where web developers are created",
-        price: 123
+        ownerId: users[Math.floor(Math.random() * users.length)].id,
+        address: "2 Twilight Town Lane",
+        city: "Kawaguchi",
+        state: "Saitama",
+        country: "Japan",
+        lat: 35.8046,
+        lng: 139.7205,
+        name: "Twilight Town Inn",
+        description: "A charming inn nestled in the heart of Kawaguchi, with a cozy atmosphere reminiscent of Twilight Town.",
+        price: 120
       },
       {
-        ownerId: users.id,
-        address: "412 Peach Lane",
-        city: "Nashville",
-        state: "Tennessee",
-        country: "United States of America",
-        lat: 17.7645358,
-        lng: -111.4730327,
-        name: "App Academy",
-        description: "Place where web developers are created",
-        price: 123
-      }
+        ownerId: users[Math.floor(Math.random() * users.length)].id,
+        address: "3 Hollow Bastion Drive",
+        city: "Bodrum",
+        state: "Mugla",
+        country: "Turkey",
+        lat: 37.0267,
+        lng: 27.4400,
+        name: "Bastion Castle Stay",
+        description: "Stay in a stunning castle-like villa overlooking the Aegean Sea, combining history and luxury.",
+        price: 300
+      },
+      {
+        ownerId: users[Math.floor(Math.random() * users.length)].id,
+        address: "4 Traverse Town Square",
+        city: "Napa",
+        state: "California",
+        country: "USA",
+        lat: 38.2975,
+        lng: -122.2869,
+        name: "Traverse Town Suites",
+       description: "Charming suites in the heart of Napa Valley, ideal for wine lovers and adventurers alike.",
+        price: 180
+      },
+      {
+        ownerId: users[Math.floor(Math.random() * users.length)].id,
+        address: "5 Agrabah Market Street",
+         city: "Marrakech",
+         state: "Marrakech-Safi",
+        country: "Morocco",
+         lat: 31.6295,
+        lng: -7.9811,
+         name: "Agrabah Bazaar Stay",
+         description: "Experience the magic of Marrakech with a stay in a vibrant riad near the bustling markets.",
+         price: 150
+      },
+      {
+        ownerId: users[Math.floor(Math.random() * users.length)].id,
+        address: "6 Neverland Harbor",
+      city: "Cancún",
+      state: "Quintana Roo",
+      country: "Mexico",
+      lat: 21.1743,
+      lng: -86.8515,
+       name: "Neverland Beach House",
+      description: "A tropical beach house with stunning ocean views, perfect for families and fun-filled adventures.",
+       price: 220
+      },
+      {
+        ownerId: users[Math.floor(Math.random() * users.length)].id,
+        address: "7 The Land of Departure",
+       city: "Queenstown",
+       state: "Otago",
+        country: "New Zealand",
+       lat: -45.0312,
+       lng: 168.6625,
+        name: "Departure Lodge",
+        description: "A luxurious lodge with breathtaking views of Lake Wakatipu and the surrounding mountains.",
+        price: 250
+      },
+      {
+        ownerId: users[Math.floor(Math.random() * users.length)].id,
+        address: "8 The Keyblade Graveyard",
+        city: "Albuquerque",
+        state: "New Mexico",
+        country: "USA",
+        lat: 35.0844,
+        lng: -106.6504,
+        name: "Graveyard Oasis",
+        description: "A unique desert retreat featuring stunning landscapes and a tranquil atmosphere.",
+        price: 130
+      },
+      {
+        ownerId: users[Math.floor(Math.random() * users.length)].id,
+        address: "9 Olympus Coliseum",
+        city: "Athens",
+        state: "Attica",
+        country: "Greece",
+        lat: 37.9838,
+        lng: 23.7650,
+        name: "Coliseum View Apartments",
+        description: "Modern apartments with stunning views of the iconic Coliseum and city landmarks.",
+        price: 170
+      },
+      {
+        ownerId: users[Math.floor(Math.random() * users.length)].id,
+        address: "10 Hollow Bastion Castle",
+        city: "Edinburgh",
+        state: "Scotland",
+        country: "UK",
+        lat: 55.9533,
+        lng: -3.1883,
+        name: "Castle Stay",
+        description: "Stay in a historic castle in the heart of Edinburgh, rich with history and stunning architecture.",
+        price: 280
+      },
+      {
+        ownerId: users[Math.floor(Math.random() * users.length)].id,
+        address: "11 Radiant Garden",
+       city: "Mont Saint-Michel",
+        state: "Normandy",
+        country: "France",
+        lat: 48.6360,
+        lng: -1.5114,
+        name: "Enchanted Garden Retreat",
+        description: "Experience the charm of Mont Saint-Michel with a stay in this picturesque retreat.",
+        price: 140
+      },
+      {
+        ownerId: users[Math.floor(Math.random() * users.length)].id,
+        address: "12 The World That Never Was",
+        city: "Reykjavik",
+        state: "Capital Region",
+        country: "Iceland",
+        lat: 64.1355,
+        lng: -21.8174,
+        name: "Shadow Realm Lodge",
+        description: "Immerse yourself in the mystical atmosphere of Iceland with this unique lodge. Cloaks are included.",
+        price: 160
+      },
     ], { validate: true });
   },
 
@@ -59,7 +167,7 @@ module.exports = {
     options.tableName = 'Spots';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      address: { [Op.in]: ['123 Disney Lane', '368 Mickey Lane', '412 Peach Lane'] }
+      address: { [Op.in]: ['1 Destiny Islands Way', '2 Twilight Town Lane', '3 Hollow Bastion Drive','4 Traverse Town Square','5 Agrabah Market Street', '6 Neverland Harbor', '7 The Land of Departure','8 The Keyblade Graveyard', '9 Olympus Coliseum','10 Hollow Bastion Castle', '11 Radiant Garden', '12 The World That Never Was'] }
     }, {});
   }
 };
