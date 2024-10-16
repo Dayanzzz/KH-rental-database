@@ -8,7 +8,13 @@ const ManageSpots = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const sessionUser = useSelector(state => state.session.user);
-    const spots = useSelector(state => Object.values(state.spots).filter(spot => spot.ownerId === sessionUser.id));
+    // const spots = useSelector(state => Object.values(state.spots).filter(spot => spot.ownerId === sessionUser.id));
+    const spots=useSelector(state=>{
+        if(sessionUser){
+            return Object.values(state.spots).filter(spot=>spot.ownerId===sessionUser.id)
+        } return [];
+        // return [] just in case you are logging out and user id not available and you no longer have spots to render
+    })
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [spotIdToDelete, setSpotIdToDelete] = useState(null);
