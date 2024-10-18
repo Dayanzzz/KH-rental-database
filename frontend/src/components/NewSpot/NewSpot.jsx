@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 function NewSpot() {
     const dispatch = useDispatch(); 
     const navigate = useNavigate();
+    
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [address, setAddress] = useState('');
@@ -13,21 +14,21 @@ function NewSpot() {
     const [state, setState] = useState('');
     const [country, setCountry] = useState('');
     const [price, setPrice] = useState('');
-    const [previewImage, setPreviewImage] = useState('');
-    const [imageUrls, setImageUrls] = useState(['', '', '', '']); 
+    // const [previewImage, setPreviewImage] = useState('');
+    // const [imageUrls, setImageUrls] = useState(['', '', '', '']); 
     const [latitude, setLatitude] = useState('');
     const [longitude, setLongitude] = useState('');
+    const [errors, setErrors] = useState({}); // State for errors
 
-    const handleImageChange = (index, value) => {
-        const newImageUrls = [...imageUrls];
-        newImageUrls[index] = value;
-        setImageUrls(newImageUrls);
-    };
+    // const handleImageChange = (index, value) => {
+    //     const newImageUrls = [...imageUrls];
+    //     newImageUrls[index] = value;
+    //     setImageUrls(newImageUrls);
+    // };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-    
         const data = {
             name,
             description,
@@ -35,41 +36,43 @@ function NewSpot() {
             city,
             state,
             country,
-            price,
-            previewImage,
-            imageUrls,
-            latitude,
-            longitude,
+            price:parseFloat(price),
+            // previewImage,
+            // imageUrls,
+            lat:parseFloat(latitude),
+            lng: parseFloat(longitude),
         };
 
         console.log('Submitting data:', data);
-        
-  
+
         try {
             const result = await dispatch(addSpot(data));
+
             console.log('Result from addSpot:', result);
-    
-            if (result) {
-                alert('Spot created!');
+
+            if (result && result.id) {
+                alert('Spot created successfully!');
                 navigate(`/spots/${result.id}`);
-               
             } else {
-                alert('Failed to create spot.');
+                alert('Failed to create spot. Please check your inputs.');
             }
         } catch (error) {
             console.error('Error creating spot:', error);
-    
-         
+
             const errorMessage = error.response?.data?.error || 'An error occurred while creating the spot.';
             alert(errorMessage);
+
+            // Set error messages based on the error response
+            if (error.response?.data?.errors) {
+                setErrors(error.response.data.errors);
+            }
         }
     };
 
     return (
         <div className="new-spot">
             <h1>Create a New Spot</h1>
-
-            <h2>Where&apos;s your place located?</h2>
+            <h2>Where&apos your place located?</h2>
             <p>Guests will only get your exact address once they booked a reservation.</p>
             <form onSubmit={handleSubmit}>
                 <label>
@@ -80,6 +83,7 @@ function NewSpot() {
                         onChange={(e) => setCountry(e.target.value)}
                         required
                     />
+                    {errors.country && <p className="error">{errors.country}</p>}
                 </label>
                 <label>
                     Address:
@@ -90,6 +94,7 @@ function NewSpot() {
                         required
                         placeholder="Street Address"
                     />
+                    {errors.address && <p className="error">{errors.address}</p>}
                 </label>
                 <label>
                     City:
@@ -99,6 +104,7 @@ function NewSpot() {
                         onChange={(e) => setCity(e.target.value)}
                         required
                     />
+                    {errors.city && <p className="error">{errors.city}</p>}
                 </label>
                 <label>
                     State:
@@ -108,6 +114,7 @@ function NewSpot() {
                         onChange={(e) => setState(e.target.value)}
                         required
                     />
+                    {errors.state && <p className="error">{errors.state}</p>}
                 </label>
                 <label>
                     Latitude:
@@ -118,8 +125,8 @@ function NewSpot() {
                         placeholder="Latitude"
                         required
                     />
+                    {errors.latitude && <p className="error">{errors.latitude}</p>}
                 </label>
-
                 <label>
                     Longitude:
                     <input
@@ -129,8 +136,8 @@ function NewSpot() {
                         placeholder="Longitude"
                         required
                     />
+                    {errors.longitude && <p className="error">{errors.longitude}</p>}
                 </label>
-
                 <label>
                     Describe your place to guests:
                     <textarea
@@ -139,8 +146,8 @@ function NewSpot() {
                         required
                         placeholder="Mention the best features of your space, any special amenities like fast wifi or parking, and what you love about the neighborhood. Please write at least 30 characters."
                     />
+                    {errors.description && <p className="error">{errors.description}</p>}
                 </label>
-
                 <label>
                     Create a title for your spot:
                     <input
@@ -150,8 +157,8 @@ function NewSpot() {
                         placeholder="Name of your spot"
                         required
                     />
+                    {errors.name && <p className="error">{errors.name}</p>}
                 </label>
-
                 <label>
                     Set a base price for your spot:
                     <div>
@@ -164,9 +171,9 @@ function NewSpot() {
                             placeholder="Price per night (USD)"
                         />
                     </div>
+                    {errors.price && <p className="error">{errors.price}</p>}
                 </label>
-
-                <div className="photo-section">
+                {/* <div className="photo-section">
                     <h2>Liven up your spot with photos</h2>
                     <p>Submit a link to at least one photo to publish your spot.</p>
                     <label>
@@ -178,6 +185,7 @@ function NewSpot() {
                             placeholder="Preview Image URL"
                             required
                         />
+                        {errors.previewImage && <p className="error">{errors.previewImage}</p>}
                     </label>
                     <label>Image URLs:</label>
                     {imageUrls.map((url, index) => (
@@ -189,8 +197,7 @@ function NewSpot() {
                             placeholder="Image URL"
                         />
                     ))}
-                </div>
-               
+                </div> */}
                 <button type="submit">Create Spot</button>
             </form>
         </div>

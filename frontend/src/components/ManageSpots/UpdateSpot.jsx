@@ -9,20 +9,22 @@ const UpdateSpot = () => {
     const navigate = useNavigate();
     const spot = useSelector((state) => state.spots[spotId]);
 
-    // Use empty strings as initial state to avoid undefined
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [address, setAddress] = useState(''); // Added address
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
     const [country, setCountry] = useState('');
     const [price, setPrice] = useState('');
-    const [lat, setLatitude] = useState('');
-    const [lng, setLongitude] = useState('');
+    const [latitude, setLatitude] = useState('');
+    const [longitude, setLongitude] = useState('');
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         if (spot) {
             setName(spot.name || '');
             setDescription(spot.description || '');
+            setAddress(spot.address || ''); // Set address if available
             setCity(spot.city || '');
             setState(spot.state || '');
             setCountry(spot.country || '');
@@ -35,19 +37,22 @@ const UpdateSpot = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const updatedSpot = {
-            name,
-            description,
+            address, // Include address in the request
             city,
             state,
             country,
+            lat: parseFloat(latitude), // Ensure lat is a number
+            lng: parseFloat(longitude), // Ensure lng is a number
+            name,
+            description,
             price: parseFloat(price), // Ensure price is a number
-    lat: parseFloat(lat), // Ensure lat is a number
-    lng: parseFloat(lng), // Ensure lng is a number
         };
-        console.log(updatedSpot)
+        
         const result = await dispatch(updateSpots(spotId, updatedSpot));
 
-        if (result) {
+        if (result && result.errors) {
+            setErrors(result.errors); // Handle errors if any
+        } else {
             navigate(`/spots/${spotId}`);
         }
     };
@@ -60,6 +65,15 @@ const UpdateSpot = () => {
         <div className="edit-spot">
             <h1>Update Your Spot</h1>
             <form onSubmit={handleSubmit}>
+                <label>
+                    Address:
+                    <input
+                        type="text"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        required
+                    />
+                </label>
                 <label>
                     Name:
                     <input
@@ -117,7 +131,7 @@ const UpdateSpot = () => {
                     Latitude:
                     <input
                         type="number"
-                        value={lat}
+                        value={latitude}
                         onChange={(e) => setLatitude(e.target.value)}
                         required
                     />
@@ -126,13 +140,14 @@ const UpdateSpot = () => {
                     Longitude:
                     <input
                         type="number"
-                        value={lng}
+                        value={longitude}
                         onChange={(e) => setLongitude(e.target.value)}
                         required
                     />
                 </label>
                 <button type="submit">Update Spot</button>
             </form>
+            {errors && <div className="error">{JSON.stringify(errors)}</div>} {/* Display any errors */}
         </div>
     );
 };

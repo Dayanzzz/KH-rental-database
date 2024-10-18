@@ -5,6 +5,7 @@ export const LOAD_SPOTS = "spots/LOAD_SPOTS";
 export const UPDATE_SPOT = "spots/UPDATE_SPOT";
 export const REMOVE_SPOT = "spots/REMOVE_SPOT";
 export const ADD_SPOT = "spots/ADD_SPOT";
+export const ADD_SPOT_IMAGES="spot/ADD_SPOT_IMAGES";
 
 const load = (spots) => {
     console.log('Dispatching load action with spots:', spots);
@@ -23,6 +24,10 @@ const add = (spot) => ({
   type: ADD_SPOT,
   spot
 });
+const addSpotImages =(spotId, images)=>({
+  type:ADD_SPOT_IMAGES,
+  payload: {spotId,images},
+})
 
 const remove = (spotId) => ({
   type: REMOVE_SPOT,
@@ -44,6 +49,10 @@ export const getSpots = () => async (dispatch) => {
     dispatch(load(spots));
   }
 };
+
+
+
+
 
 export const updateSpots = (spotId, data) => async (dispatch, getState) => {
   const state = getState();
@@ -68,6 +77,9 @@ export const updateSpots = (spotId, data) => async (dispatch, getState) => {
   }
 };
 
+
+
+
 export const removeSpot = (spotId) => async (dispatch, getState) => {
   const state = getState();
   if (!isLoggedIn(state)) {
@@ -84,6 +96,9 @@ export const removeSpot = (spotId) => async (dispatch, getState) => {
     dispatch(remove(spotId));
   }
 };
+
+
+
 
 export const addSpot = (data) => async (dispatch, getState) => {
   const state = getState();
@@ -114,6 +129,22 @@ export const addSpot = (data) => async (dispatch, getState) => {
   }
 };
 
+//CREATE SPOT IMAGE 
+// export const createSpotImages = (spotId, imageUrls)=> async(dispatch)=>{
+//   const response = await fetch(`/api/spots/${spotId}`,{
+//     method: 'POST',
+//     headers: {
+//         'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({ images: imageUrls }),
+//   })
+//   if (response.ok) {
+//     const images = await response.json();
+//     dispatch(addSpotImages(spotId, images));
+// } else {
+//     throw new Error('Failed to add images');
+// }
+// }
 
 const initialState = {};
 

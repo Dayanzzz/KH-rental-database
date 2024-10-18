@@ -17,7 +17,8 @@ function Layout() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    dispatch(sessionActions.restoreUser()).then(() => {
+    dispatch(sessionActions.restoreUser())
+    .then(() => {
       setIsLoaded(true)
     });
   }, [dispatch]);
