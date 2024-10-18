@@ -46,6 +46,7 @@
 // export default SpotDetail;
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import './SpotDetail.css';
 
 const SpotDetails = () => {
     const { spotId } = useParams();
@@ -81,23 +82,35 @@ const SpotDetails = () => {
 
     return (
         <div className="spot-details">
-            <h1>{spot.name}</h1>
-            <p>{spot.description}</p>
-            <p>Location: {spot.city}, {spot.state}, {spot.country}</p>
-            <p>Price: ${spot.price}</p>
-            <div>
-                <h2>Images:</h2>
-                {spot.SpotImages.length > 0 ? (
-                    spot.SpotImages.map((image) => (
-                        <img key={image.id} src={image.url} alt={spot.name} style={{ width: '300px', height: '200px' }} />
-                    ))
-                ) : (
-                    <p>No images available</p>
-                )}
+            <div className="image-container">
+                <div className="previewImage-container">
+                    {spot.SpotImages.length > 0 && (
+                        <img className="previewimage" src={spot.SpotImages[0].url} alt={spot.name} />
+                    )}
+                </div>
+                <div className="thumbnailImages-container">
+                    {spot.SpotImages.slice(1).map((image) => (
+                        <div className="thumbnailimage-box" key={image.id}>
+                            <img className="thumbnailimage" src={image.url} alt={spot.name} />
+                        </div>
+                    ))}
+                </div>
             </div>
-            <p>Number of Reviews: {spot.numReviews}</p>
-            <p>Average Rating: {spot.avgStarRating}</p>
+            <div className="details-container">
+                <h1>{spot.name}</h1>
+                <p className="location">{spot.city}, {spot.state}, {spot.country}</p>
+                <p className="price">${spot.price} per night</p>
+                <div className="description">
+                    <h2>Description</h2>
+                    <p>{spot.description}</p>
+                </div>
+                <div className="reviews">
+                    <p>Number of Reviews: {spot.numReviews}</p>
+                    <p>Average Rating: {spot.avgStarRating}</p>
+                </div>
+            </div>
         </div>
     );
 };
+
 export default SpotDetails;

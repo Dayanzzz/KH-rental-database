@@ -106,6 +106,12 @@ export const addSpot = (data) => async (dispatch, getState) => {
     dispatch(add(spot));
     return spot;
   }
+  //adding this else statement
+  else {
+    const errorData = await response.json();
+    console.error('Error creating spot:', errorData); // Log error details
+    throw new Error('Failed to create spot'); // Throw an error for further handling
+  }
 };
 
 

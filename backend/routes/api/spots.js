@@ -239,6 +239,7 @@ router.get('/current',requireAuth, async (req, res) => {
      }
      const numReviews = await getNumReviews(spotId);
      const avgStarRating = await getAverageRating(spotId);
+     
      const response = {
       id: spot.id,
       ownerId: spot.ownerId,

@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSpots, removeSpot } from '../../store/spots';
-import { useNavigate } from 'react-router-dom';
-import './ManageSpots.css'; // Ensure your CSS file is linked
+import { useNavigate, NavLink } from 'react-router-dom';
+import './ManageSpots.css'; // Ensure your CSS is linked properly
 
 const ManageSpots = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const sessionUser = useSelector(state => state.session.user);
-    // const spots = useSelector(state => Object.values(state.spots).filter(spot => spot.ownerId === sessionUser.id));
-    const spots=useSelector(state=>{
-        if(sessionUser){
-            return Object.values(state.spots).filter(spot=>spot.ownerId===sessionUser.id)
-        } return [];
-        // return [] just in case you are logging out and user id not available and you no longer have spots to render
-    })
+
+    const spots = useSelector(state => {
+        if (sessionUser) {
+            return Object.values(state.spots).filter(spot => spot.ownerId === sessionUser.id);
+        }
+        return [];
+    });
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [spotIdToDelete, setSpotIdToDelete] = useState(null);
@@ -45,23 +45,62 @@ const ManageSpots = () => {
         setSpotIdToDelete(null);
     };
 
+    const starEmoji = '⭐';
+
     return (
-        <div className="manage-spots">
-            <h1>Your Managed Spots</h1>
+        <div className="manage-spots-layout">
+            <h1>Managed Spots</h1>
+            <button className="ManageCreate" onClick={(e) => {
+                                            e.stopPropagation(); // Prevents bubbling to NavLink
+                                            navigate(`/spots/new`);
+                                        }}>Create a New Spot</button>
             {spots.length === 0 ? (
                 <p>You don&apos;t have any spots listed. Create a new spot!</p>
             ) : (
-                <ul>
+                <div className="row">
                     {spots.map(spot => (
-                        <li key={spot.id}>
-                            <h2>{spot.name}</h2>
-                            <p>{spot.city}, {spot.state}</p>
-                            <p>${spot.price} per night</p>
-                            <button onClick={() => navigate(`/spots/${spot.id}/edit`)}>Edit</button>
-                            <button onClick={() => handleDelete(spot.id)}>Delete</button>
-                        </li>
+                        <div className="column" key={spot.id}>
+                            <div className="spotTile">
+                                <NavLink to={`/spots/${spot.id}`} className="spotLink">
+                                    <img
+                                        className="imgLayout"
+                                        src={spot.previewImage} // Assuming `previewImage` is an array
+                                        alt={spot.name}
+                                    />
+                                    <div className="tooltip">{spot.name}</div>
+                                </NavLink>
+
+                                <div className="spotGridHeader">
+                                    <div className="location">{spot.city}, {spot.state}</div>
+                                    <div className="star">{starEmoji} {spot.starRating}</div>
+                                </div>
+
+                                <div className="spotGridDetails">
+                                    <p>${spot.price} per night</p>
+                                </div>
+
+                                <div className="spotButtons">
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation(); // Prevents bubbling to NavLink
+                                            navigate(`/spots/${spot.id}/edit`);
+                                        }}
+                                    >
+                                        Edit
+                                    </button>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation(); // Prevents bubbling to NavLink
+                                            handleDelete(spot.id);
+                                        }}
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     ))}
-                </ul>
+                </div>
             )}
 
             {isModalOpen && (

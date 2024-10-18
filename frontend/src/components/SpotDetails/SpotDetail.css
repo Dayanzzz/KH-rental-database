@@ -1,5 +1,5 @@
 /* src/components/SpotDetail.css */
-
+/* 
 .spot-detail {
     padding: 20px;
     max-width: 600px;
@@ -22,15 +22,54 @@
     border-radius: 5px;
 }
 
-/* button {
-    background-color: #4CAF50; /* Green */
-    /* color: white;
+ button {
+    background-color: #4CAF50; 
+    color: white;
     padding: 10px 15px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
-/*  */
-/* button:hover {
+  
+ button:hover {
     background-color: #45a049;
-}  */
+}   */
+
+.spot-details{
+    max-width: 1200px;
+    display:flex;
+    flex-direction:column;
+    margin-left:20%;
+    margin-right:20%;
+}
+.image-container{
+    height:600px;
+    display:flex;
+}
+.previewImage-container{
+    width:50%;
+
+}
+.thumbnailImages-container{
+    width:50%;
+    display:flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    
+}
+
+.thumbnailimage{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.previewimage{
+    width: 100%;
+    height:100%;
+    object-fit: cover;
+}
+.thumbnailimage-box{
+width:50%;
+height: 50%;
+}

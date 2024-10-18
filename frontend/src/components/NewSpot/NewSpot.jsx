@@ -1,7 +1,11 @@
 import { useState } from 'react';
-import './NewSpot.css'; // Ensure to import your CSS
+import { useDispatch } from 'react-redux';
+import { addSpot } from '../../store/spots'; 
+import { useNavigate } from 'react-router-dom';
 
 function NewSpot() {
+    const dispatch = useDispatch(); 
+    const navigate = useNavigate();
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [address, setAddress] = useState('');
@@ -20,11 +24,45 @@ function NewSpot() {
         setImageUrls(newImageUrls);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Handle form submission logic here
-        alert('Spot created!'); // Replace with actual submission logic
-        // Here you could navigate to the spot detail page if needed
+
+        // Prepare the data to be submitted
+        const data = {
+            name,
+            description,
+            address,
+            city,
+            state,
+            country,
+            price: parseFloat(price), // Ensure price is a number
+            previewImage: previewImage.startsWith('http') ? previewImage : `http://${previewImage}`,
+            imageUrls: imageUrls.filter(url => url.startsWith('http')), // Filter out invalid URLs
+            latitude: parseFloat(latitude), // Ensure latitude is a number
+            longitude: parseFloat(longitude), // Ensure longitude is a number
+        };
+
+        console.log('Submitting data:', data);
+        
+        // Dispatch the addSpot action
+        try {
+            const result = await dispatch(addSpot(data));
+            console.log('Result from addSpot:', result);
+    
+            if (result) {
+                alert('Spot created!');
+                navigate(`/spots/${result.id}`); // Navigate to the new spot's detail page
+                // Optionally reset the form here
+            } else {
+                alert('Failed to create spot.');
+            }
+        } catch (error) {
+            console.error('Error creating spot:', error);
+    
+            // Handle specific error messages
+            const errorMessage = error.response?.data?.error || 'An error occurred while creating the spot.';
+            alert(errorMessage);
+        }
     };
 
     return (
@@ -36,81 +74,81 @@ function NewSpot() {
             <form onSubmit={handleSubmit}>
                 <label>
                     Country:
-                    <input 
-                        type="text" 
-                        value={country} 
-                        onChange={(e) => setCountry(e.target.value)} 
-                        required 
+                    <input
+                        type="text"
+                        value={country}
+                        onChange={(e) => setCountry(e.target.value)}
+                        required
                     />
                 </label>
                 <label>
                     Address:
-                    <input 
-                        type="text" 
-                        value={address} 
-                        onChange={(e) => setAddress(e.target.value)} 
-                        required 
-                        placeholder="Street Address" 
+                    <input
+                        type="text"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        required
+                        placeholder="Street Address"
                     />
                 </label>
                 <label>
                     City:
-                    <input 
-                        type="text" 
-                        value={city} 
-                        onChange={(e) => setCity(e.target.value)} 
-                        required 
+                    <input
+                        type="text"
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
+                        required
                     />
                 </label>
                 <label>
                     State:
-                    <input 
-                        type="text" 
-                        value={state} 
-                        onChange={(e) => setState(e.target.value)} 
-                        required 
+                    <input
+                        type="text"
+                        value={state}
+                        onChange={(e) => setState(e.target.value)}
+                        required
                     />
                 </label>
                 <label>
                     Latitude:
-                    <input 
-                        type="text" 
-                        value={latitude} 
-                        onChange={(e) => setLatitude(e.target.value)} 
-                        placeholder="Latitude" 
-                        required 
+                    <input
+                        type="text"
+                        value={latitude}
+                        onChange={(e) => setLatitude(e.target.value)}
+                        placeholder="Latitude"
+                        required
                     />
                 </label>
 
                 <label>
-                     Longitude:
-                    <input 
-                        type="text" 
-                        value={longitude} 
-                        onChange={(e) => setLongitude(e.target.value)} 
-                        placeholder="Longitude" 
-                        required 
+                    Longitude:
+                    <input
+                        type="text"
+                        value={longitude}
+                        onChange={(e) => setLongitude(e.target.value)}
+                        placeholder="Longitude"
+                        required
                     />
                 </label>
 
                 <label>
                     Describe your place to guests:
-                    <textarea 
-                        value={description} 
-                        onChange={(e) => setDescription(e.target.value)} 
-                        required 
+                    <textarea
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        required
                         placeholder="Mention the best features of your space, any special amenities like fast wifi or parking, and what you love about the neighborhood. Please write at least 30 characters."
                     />
                 </label>
 
                 <label>
                     Create a title for your spot:
-                    <input 
-                        type="text" 
-                        value={name} 
-                        onChange={(e) => setName(e.target.value)} 
-                        placeholder="Name of your spot" 
-                        required 
+                    <input
+                        type="text"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Name of your spot"
+                        required
                     />
                 </label>
 
@@ -118,12 +156,12 @@ function NewSpot() {
                     Set a base price for your spot:
                     <div>
                         <span>$</span>
-                        <input 
-                            type="number" 
-                            value={price} 
-                            onChange={(e) => setPrice(e.target.value)} 
-                            required 
-                            placeholder="Price per night (USD)" 
+                        <input
+                            type="number"
+                            value={price}
+                            onChange={(e) => setPrice(e.target.value)}
+                            required
+                            placeholder="Price per night (USD)"
                         />
                     </div>
                 </label>
@@ -133,26 +171,26 @@ function NewSpot() {
                     <p>Submit a link to at least one photo to publish your spot.</p>
                     <label>
                         Preview Image URL:
-                        <input 
-                            type="text" 
-                            value={previewImage} 
-                            onChange={(e) => setPreviewImage(e.target.value)} 
-                            placeholder="Preview Image URL" 
-                            required 
+                        <input
+                            type="text"
+                            value={previewImage}
+                            onChange={(e) => setPreviewImage(e.target.value)}
+                            placeholder="Preview Image URL"
+                            required
                         />
                     </label>
                     <label>Image URLs:</label>
                     {imageUrls.map((url, index) => (
-                        <input 
-                            key={index} 
-                            type="text" 
-                            value={url} 
-                            onChange={(e) => handleImageChange(index, e.target.value)} 
-                            placeholder="Image URL" 
+                        <input
+                            key={index}
+                            type="text"
+                            value={url}
+                            onChange={(e) => handleImageChange(index, e.target.value)}
+                            placeholder="Image URL"
                         />
                     ))}
                 </div>
-                
+               
                 <button type="submit">Create Spot</button>
             </form>
         </div>

@@ -3,7 +3,7 @@
 
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSpots } from '../../store/spots'; // Adjust the path as necessary
+import { getSpots } from '../../store/spots'; 
 import './SpotsLayout.css';
 import { NavLink } from 'react-router-dom';
 
@@ -14,28 +14,51 @@ function SpotsLayout() {
     const starEmoji = '⭐';
 
     useEffect(() => {
-        dispatch(getSpots()); // Fetch spots when the component mounts
+        dispatch(getSpots()); // Fetch spots 
     }, [dispatch]);
 
     return (
         <>
             <div className="row">
-                {spots.map(spot =>  (
+                {spots.map(spot => { 
+                    const averageRating = spot.avgStarRating ? spot.avgStarRating.toFixed(2) : 'New';
+                    const reviewCount = spot.numReviews;
+                    
+                    return (
                     <div className="column" key={spot.id}>
-                        <NavLink to={`/spots/${spot.id}`} className="spotTile"> {/* Add NavLink here */}
-                            <img className="imgLayout" src={spot.previewImage[0]} alt={spot.name} />
+                        <NavLink to={`/spots/${spot.id}`} className="spotTile"> 
+                        {/* might need to add previewImage[0] */}
+                           <div className="spotslayout-imagecontainer"> <img className="imgLayout" src={spot.previewImage} alt={spot.name} /></div>
+
+                            
                             <div className="tooltip">{spot.name}</div>
-                            <div className="spotGridHeader">
+                          <div className="spotslayout-infocontainer"> 
+                             <div className="spotGridHeader">
                                 <div className="location">{spot.city}, {spot.state}</div>
-                                <div className="star">{starEmoji} {spot.starRating}</div> {/* Assuming you have a starRating field */}
+                                <div className="star">{starEmoji} {reviewCount > 0 ? (
+                                                <>
+                                                    {averageRating} · {reviewCount} {reviewCount === 1 ? 'Review' : 'Reviews'}
+                                                </>
+                                            ) : (
+                                                averageRating
+                                            )} {spot.starRating}
+                                            </div> 
+                                {/* {reviews.length===0 ? (
+                                    <span>{starEmoji} New </span>
+                                 ):(
+                            <span>{starEmoji}{spot.starRating}</span>)}
+ */}
+
+
                             </div>
                             <div className="spotGridDetails">
                                 <p>${spot.price} night</p>
                             </div>
+                            </div>
                         </NavLink>
                     </div>
                 )
-  )}
+})}
             </div>
         </>
     );
