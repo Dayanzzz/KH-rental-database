@@ -73,3 +73,29 @@
 width:50%;
 height: 50%;
 }
+
+
+
+.details-container h1 {
+   text-align: left;
+   color: navy;
+}
+
+.details-container .location {
+    font-size: 1.2rem; 
+    color: navy; 
+    text-align: left;
+}
+.hostname p{
+    text-align:left;
+    color: navy;
+}
+
+.description h2{
+    text-align:left;
+    color:navy;
+}
+.review p{
+    text-align:left;
+    color:navy;
+}

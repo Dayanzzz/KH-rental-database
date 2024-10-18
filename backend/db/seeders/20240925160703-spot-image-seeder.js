@@ -231,7 +231,7 @@ module.exports = {
       {
         spotId: 7,
         //https://res.cloudinary.com/dxdv1ejlq/image/upload/v1729113006/tina-witherspoon-q6i0SY68BVA-unsplash_sjrdr9.jpg
-        url: `${cloudinaryBaseUrl}v1729100589/v1729113006/tina-witherspoon-q6i0SY68BVA-unsplash_sjrdr9.jpg`, // lodge bath
+        url: `${cloudinaryBaseUrl}v1729113006/tina-witherspoon-q6i0SY68BVA-unsplash_sjrdr9.jpg`, // lodge bath
         preview: false
       },
       {
@@ -441,7 +441,7 @@ module.exports = {
             `${cloudinaryBaseUrl}v1729112866/nine-koepfer-OZiflZqq0N0-unsplash_rwooj2.jpg`,
             `${cloudinaryBaseUrl}v1729112866/nine-koepfer-OZiflZqq0N0-unsplash_rwooj2.jpg`,
             `${cloudinaryBaseUrl}v1729112880/radek-grzybowski-1Ttpg_FDKXk-unsplash_wp0rjv.jpg`,
-            `${cloudinaryBaseUrl}v1729100589/v1729113006/tina-witherspoon-q6i0SY68BVA-unsplash_sjrdr9.jpg`,
+            `${cloudinaryBaseUrl}v1729113006/tina-witherspoon-q6i0SY68BVA-unsplash_sjrdr9.jpg`,
              `${cloudinaryBaseUrl}v1729112921/casey-horner-9HyVwpOOSBI-unsplash_nl2nbv.jpg`, // end spot 7
             `${cloudinaryBaseUrl}v1729113235/tania-orozco-qXgbYjcBJHc-unsplash_lriqpx.jpg`,
             `${cloudinaryBaseUrl}/v1729113180/amira-aboalnaga-O7WjrXiKy_s-unsplash_h4dhcl.jpg`,

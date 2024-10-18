@@ -17,12 +17,14 @@ function SpotsLayout() {
         dispatch(getSpots()); // Fetch spots 
     }, [dispatch]);
 
+    console.log(spots);
+
     return (
         <>
             <div className="row">
                 {spots.map(spot => { 
                     const averageRating = spot.avgStarRating ? spot.avgStarRating.toFixed(2) : 'New';
-                    const reviewCount = spot.numReviews;
+               
                     
                     return (
                     <div className="column" key={spot.id}>
@@ -35,13 +37,7 @@ function SpotsLayout() {
                           <div className="spotslayout-infocontainer"> 
                              <div className="spotGridHeader">
                                 <div className="location">{spot.city}, {spot.state}</div>
-                                <div className="star">{starEmoji} {reviewCount > 0 ? (
-                                                <>
-                                                    {averageRating} · {reviewCount} {reviewCount === 1 ? 'Review' : 'Reviews'}
-                                                </>
-                                            ) : (
-                                                averageRating
-                                            )} {spot.starRating}
+                                <div className="star">{starEmoji} {averageRating}
                                             </div> 
                                 {/* {reviews.length===0 ? (
                                     <span>{starEmoji} New </span>

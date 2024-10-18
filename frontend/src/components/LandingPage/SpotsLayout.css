@@ -77,11 +77,12 @@ text-align: left;
     padding: 5px; 
     position: absolute; 
     z-index: 1; 
-    bottom: 100%; 
-    left: 50%; 
-    margin-left: -60px; 
+    bottom: 50%; 
+    right: 50%; 
+    transform: translateX(-50%); /* Center the tooltip */
     opacity: 0; 
     transition: opacity 0.3s; 
+    font-size: 10px;
 }
 
 .spotTile:hover .tooltip {
@@ -92,8 +93,6 @@ text-align: left;
 .spotslayout-imagecontainer{
     height:60%;
 }
-
-
 
 
 

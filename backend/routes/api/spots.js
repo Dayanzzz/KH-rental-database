@@ -537,6 +537,8 @@ const reviews = await Review.findAll({
       attributes: ['id', 'url'], 
     },
   ],
+  // to order by newest review
+  order:[['createdAt', 'DESC']],
 });
 const formattedReviews = [];
 // reviews.forEach(review =>{
