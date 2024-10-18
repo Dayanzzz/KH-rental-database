@@ -4,8 +4,9 @@ ul {
     padding: 0;
     margin: 0;
     display: flex;
-    justify-content: space-between; /* Space items evenly */
-    background-color: #FFFFE0; /* Navbar background color */
+  align-items: center;
+    background-color: white;
+    box-shadow: 1px 1px 1px #000000;
     padding: 10px 20px; /* Padding for the navbar */
   }
   
@@ -31,6 +32,7 @@ ul {
   .siteLogo{
     display:flex;
     align-items:center;
+    width:80%
   }
 
   .logo img{
@@ -45,6 +47,12 @@ ul {
     font-family: cursive; /* Change 'YourFontName' to the font you chose */
     color: #000080;
   }
+
+.createspot{
+  width:20%;
+  text-align: right;
+}
+
   .create-spot-link {
     margin-right: 20px; /* Space between create link and profile button */
     text-decoration: none; /* Remove underline */

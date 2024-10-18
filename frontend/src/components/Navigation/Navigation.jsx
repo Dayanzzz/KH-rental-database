@@ -13,7 +13,7 @@ function Navigation({ isLoaded }) {
       <NavLink to="/"className = "logo"><img className = "logo" src = {logoo} alt=""/></NavLink>
       <span className="logo-text">Destiny Lodgings</span>
       </li>
-      
+     
       {isLoaded && (
         <>
        
@@ -33,4 +33,4 @@ function Navigation({ isLoaded }) {
   );
 }
 
-export default Navigation;
+  export default Navigation

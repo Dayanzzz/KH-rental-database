@@ -9,11 +9,12 @@
 
 .location
 {
-    font-size:smaller;
+    font-size:0.7em;
+    color:navy;
 }
 
 .spotGridDetails p{
-    font-size:smaller;
+    font: size 0.7em;;
 }
 
 
@@ -50,6 +51,7 @@
     width:100%;
     height:100%;
     object-fit:cover;
+    border-radius:5px;
     
   }
   .spotGridHeader{
@@ -60,16 +62,23 @@
 
   .star{ 
     margin-right:10px;
+    font-size: 0.7em;
+    color:navy;
   }
 
   .spotGridDetails p{
 text-align: left;
+font-size: 0.7em;
+text-decoration: none;
+color:navy;
   }
 
 
   .spotTile {
     position: relative; 
     cursor: pointer; 
+    text-decoration: none;
+    color:inherit;
 }
 
 .tooltip {
@@ -103,4 +112,8 @@ text-align: left;
 
 .new-spot h2{
   text-align:center;
+}
+
+.spotslayout-infocontainer{
+  padding:10px;
 }

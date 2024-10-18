@@ -22,7 +22,7 @@ function SpotsLayout() {
         <>
             <div className="row">
                 {spots.map(spot => { 
-                    const averageRating = spot.avgStarRating ? spot.avgStarRating.toFixed(2) : 'New';
+                    const averageRating = spot.avgRating ? spot.avgRating.toFixed(1) : 'New';
                
                     
                     return (

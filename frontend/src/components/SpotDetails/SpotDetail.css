@@ -86,12 +86,14 @@ height: 50%;
     color: navy; 
     text-align: left;
 }
-.hostname p{
+.hostname h2{
     text-align:left;
     color: navy;
+    font-size:1em;
+    ;
 }
 
-.description h2{
+.description p{
     text-align:left;
     color:navy;
 }
