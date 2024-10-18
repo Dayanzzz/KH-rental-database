@@ -14,7 +14,7 @@ function NewSpot() {
     const [country, setCountry] = useState('');
     const [price, setPrice] = useState('');
     const [previewImage, setPreviewImage] = useState('');
-    const [imageUrls, setImageUrls] = useState(['', '', '', '']); // Array for image URLs
+    const [imageUrls, setImageUrls] = useState(['', '', '', '']); 
     const [latitude, setLatitude] = useState('');
     const [longitude, setLongitude] = useState('');
 
@@ -27,7 +27,7 @@ function NewSpot() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Prepare the data to be submitted
+    
         const data = {
             name,
             description,
@@ -35,31 +35,31 @@ function NewSpot() {
             city,
             state,
             country,
-            price: parseFloat(price), // Ensure price is a number
-            previewImage: previewImage.startsWith('http') ? previewImage : `http://${previewImage}`,
-            imageUrls: imageUrls.filter(url => url.startsWith('http')), // Filter out invalid URLs
-            latitude: parseFloat(latitude), // Ensure latitude is a number
-            longitude: parseFloat(longitude), // Ensure longitude is a number
+            price,
+            previewImage,
+            imageUrls,
+            latitude,
+            longitude,
         };
 
         console.log('Submitting data:', data);
         
-        // Dispatch the addSpot action
+  
         try {
             const result = await dispatch(addSpot(data));
             console.log('Result from addSpot:', result);
     
             if (result) {
                 alert('Spot created!');
-                navigate(`/spots/${result.id}`); // Navigate to the new spot's detail page
-                // Optionally reset the form here
+                navigate(`/spots/${result.id}`);
+               
             } else {
                 alert('Failed to create spot.');
             }
         } catch (error) {
             console.error('Error creating spot:', error);
     
-            // Handle specific error messages
+         
             const errorMessage = error.response?.data?.error || 'An error occurred while creating the spot.';
             alert(errorMessage);
         }

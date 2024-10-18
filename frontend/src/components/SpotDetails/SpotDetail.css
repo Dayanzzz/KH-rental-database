@@ -99,3 +99,40 @@ height: 50%;
     text-align:left;
     color:navy;
 }
+.callout-box {
+    background-color: #f8f8f8;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-left: 20px;
+    width: 250px; /* Set a fixed width */
+}
+
+.callout-box h3 {
+    margin: 0 0 10px;
+}
+
+.callout-box button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.callout-box button:hover {
+    background-color: #0056b3;
+}
+
+.leftdetails{
+    width:60%;
+}
+.rightdetails{
+    width: 40%;
+}
+
+.detailsbody{
+    display:flex;
+    margin-top: 40px;
+}

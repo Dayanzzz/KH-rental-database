@@ -1,36 +1,46 @@
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react'; //manage state& lifecycle
+import { useDispatch, useSelector } from 'react-redux';//send actions to redux store, read data from store
 import { getSpots, removeSpot } from '../../store/spots';
-import { useNavigate, NavLink } from 'react-router-dom';
-import './ManageSpots.css'; // Ensure your CSS is linked properly
+import { useNavigate, NavLink } from 'react-router-dom';//change routes in api
+import './ManageSpots.css'; 
 
 const ManageSpots = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const sessionUser = useSelector(state => state.session.user);
+    const sessionUser = useSelector(state => state.session.user);//get currently logged-in user from Redux store
 
+    //useSeletor retrieves lists of spots from store
     const spots = useSelector(state => {
         if (sessionUser) {
-            return Object.values(state.spots).filter(spot => spot.ownerId === sessionUser.id);
+            //convert spot objects into an array  
+            return Object.values(state.spots)
+            //filters spots only where ownerId===sessionUser.id
+            .filter(spot => spot.ownerId === sessionUser.id);
         }
+        //if no user logged in , return an empty array 
         return [];
     });
-
+    //track if modal is open or closed
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [spotIdToDelete, setSpotIdToDelete] = useState(null);
+    // keep track of which spot ID being deleted
+    const [spotIdToDelete, setSpotIdToDelete] = useState(null); 
 
     useEffect(() => {
+        //redirect to homepage if no user loggedin
         if (!sessionUser) {
             navigate('/');
         } else {
+            //if there is loggedinuser, dispatch the getSpots action to fetch the user's spots from the server
             dispatch(getSpots());
         }
     }, [dispatch, navigate, sessionUser]);
 
+//set state to id of spot to delete
     const handleDelete = (spotId) => {
         setSpotIdToDelete(spotId);
         setIsModalOpen(true);
     };
+
 
     const confirmDelete = () => {
         if (spotIdToDelete) {
@@ -51,7 +61,7 @@ const ManageSpots = () => {
         <div className="manage-spots-layout">
             <h1>Managed Spots</h1>
             <button className="ManageCreate" onClick={(e) => {
-                                            e.stopPropagation(); // Prevents bubbling to NavLink
+                                            e.stopPropagation(); 
                                             navigate(`/spots/new`);
                                         }}>Create a New Spot</button>
             {spots.length === 0 ? (
@@ -62,9 +72,11 @@ const ManageSpots = () => {
                         <div className="column" key={spot.id}>
                             <div className="spotTile">
                                 <NavLink to={`/spots/${spot.id}`} className="spotLink">
+
+
                                     <img
                                         className="imgLayout"
-                                        src={spot.previewImage} // Assuming `previewImage` is an array
+                                        src={spot.previewImage} 
                                         alt={spot.name}
                                     />
                                     <div className="tooltip">{spot.name}</div>
@@ -82,7 +94,7 @@ const ManageSpots = () => {
                                 <div className="spotButtons">
                                     <button
                                         onClick={(e) => {
-                                            e.stopPropagation(); // Prevents bubbling to NavLink
+                                            e.stopPropagation(); 
                                             navigate(`/spots/${spot.id}/edit`);
                                         }}
                                     >
@@ -90,7 +102,7 @@ const ManageSpots = () => {
                                     </button>
                                     <button
                                         onClick={(e) => {
-                                            e.stopPropagation(); // Prevents bubbling to NavLink
+                                            e.stopPropagation(); 
                                             handleDelete(spot.id);
                                         }}
                                     >
@@ -102,19 +114,25 @@ const ManageSpots = () => {
                     ))}
                 </div>
             )}
-
+                {/* only render when modalopen true  */}
             {isModalOpen && (
                 <div className="modal-overlay">
+                    
                     <div className="modal">
+
                         <h2>Confirm Delete</h2>
                         <p>Are you sure you want to remove this spot?</p>
+
                         <div className="modal-buttons">
+
                             <button className="delete-button" onClick={confirmDelete}>
                                 Yes (Delete Spot)
                             </button>
+
                             <button className="cancel-button" onClick={cancelDelete}>
                                 No (Keep Spot)
                             </button>
+
                         </div>
                     </div>
                 </div>

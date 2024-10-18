@@ -16,7 +16,7 @@ module.exports = {
         stars: 5.0,
       },
       {
-        spotId: 2, // Twilight Town Inn
+        spotId: 1, // Twilight Town Inn
         userId: 6,
         review: 'The Twilight Town Inn had a lovely, nostalgic feel. The staff was welcoming and the atmosphere was cozy. Just what I needed!',
         stars: 4.0,

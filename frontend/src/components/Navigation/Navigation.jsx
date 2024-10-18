@@ -13,17 +13,18 @@ function Navigation({ isLoaded }) {
       <NavLink to="/"className = "logo"><img className = "logo" src = {logoo} alt=""/></NavLink>
       <span className="logo-text">Destiny Lodgings</span>
       </li>
+      
       {isLoaded && (
         <>
        
         {sessionUser && (
-            <li>
+            <li className="createspot">
               <NavLink to="/spots/new" className="create-spot-link">
                 Create a New Spot
               </NavLink>
             </li>
       )}
-       <li>
+       <li className="profilebutton">
           <ProfileButton user={sessionUser} />
         </li>
       </>

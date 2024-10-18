@@ -1,9 +1,9 @@
-/* Show pointer cursor for clickable elements */
-.logo,   /* Assuming you have a class for your logo */
-.button, /* Assuming you have a class for your buttons */
-.column  /* Assuming this is your class for spot tiles */
+
+.logo,   
+.button, 
+.column  
 {
-    cursor: pointer; /* Changes the cursor to a pointer */
+    cursor: pointer; 
 }
 
 
@@ -11,16 +11,19 @@
 {
     font-size:smaller;
 }
+
 .spotGridDetails p{
     font-size:smaller;
 }
-/* Optional: You can also add hover effects for better UX */
+
+
+
 .logo:hover,
 .button:hover,
 .column:hover {
-    opacity: 0.9; /* Slightly dim the element on hover */
-    transform: scale(1.02); /* Slightly increase size on hover */
-    transition: all 0.3s ease; /* Smooth transition */
+    opacity: 0.9; 
+    transform: scale(1.02);
+    transition: all 0.3s ease; 
 }
 
 
@@ -54,9 +57,11 @@
     justify-content: space-between;
     align-items: center;
   }
+
   .star{ 
     margin-right:10px;
   }
+
   .spotGridDetails p{
 text-align: left;
   }
@@ -79,15 +84,15 @@ text-align: left;
     z-index: 1; 
     bottom: 50%; 
     right: 50%; 
-    transform: translateX(-50%); /* Center the tooltip */
+    transform: translateX(-50%); 
     opacity: 0; 
     transition: opacity 0.3s; 
     font-size: 10px;
 }
 
 .spotTile:hover .tooltip {
-    visibility: visible; /* Show on hover */
-    opacity: 1; /* Fade in */
+    visibility: visible; 
+    opacity: 1; 
 }
 
 .spotslayout-imagecontainer{
@@ -96,3 +101,6 @@ text-align: left;
 
 
 
+.new-spot h2{
+  text-align:center;
+}

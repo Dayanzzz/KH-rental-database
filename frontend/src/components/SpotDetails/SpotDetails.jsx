@@ -54,6 +54,10 @@ const SpotDetails = () => {
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const handleReserveClick = () => {
+        alert("Feature coming soon");
+    };
+
     useEffect(() => {
         const fetchSpotDetails = async () => {
             try {
@@ -110,17 +114,36 @@ const SpotDetails = () => {
                     ))}
                 </div>
             </div>
-            <div className="hostname">
-                <p>Hosted by: {spot.ownerId}</p>
+            <div className="detailsbody">
+              <div className="leftdetails">
+                    <div className="hostname">
+                       <p>Hosted by: {spot.ownerId}</p>
+                     </div>
+                  <div className="description">
+                         <h2>{spot.description}</h2>
+             </div>
+                    </div>
+            
+            <div className="rightdetails">
+            <div className="callout-box">
+                <h3>Price: ${spot.price.toFixed(2)} night</h3>
+                <p>
+                    <span role="img" aria-label="star">⭐</span>
+                    <span>{spot.avgStarRating.toFixed(1)} </span>
+                    <span> • </span>
+                    <span>{spot.numReviews} Review{spot.numReviews !== 1 ? 's' : ''}</span>
+                </p>
+                <button onClick={handleReserveClick}>Reserve</button>
             </div>
-            <div className="description">
-                <h2>{spot.description}</h2>
+            </div>
+            
+
             </div>
             <div className="reviews-summary">
                 <span role="img" aria-label="star">⭐</span>
-                <span>{spot.avgStarRating.toFixed(1)} </span> {/* Ensures one decimal place */}
+                <span>{spot.avgStarRating.toFixed(1)} </span> 
                 <span> • </span>
-                <span>{spot.numReviews} Review{spot.numReviews !== 1 ? 's' : ''}</span> {/* Singular/plural adjustment */}
+                <span>{spot.numReviews} Review{spot.numReviews !== 1 ? 's' : ''}</span>
             </div>
             <div className="reviews">
                 
@@ -137,6 +160,7 @@ const SpotDetails = () => {
                     <p>Be the first to post a review!</p>
                 )}
             </div>
+            
         </div>
     );
     
