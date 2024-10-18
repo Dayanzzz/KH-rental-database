@@ -60,10 +60,11 @@ const ManageSpots = () => {
     return (
         <div className="manage-spots-layout">
             <h1>Managed Spots</h1>
-            <button className="ManageCreate" onClick={(e) => {
+                                    <div className="manage-spot-createbtn"> <button className="ManageCreate" onClick={(e) => {
                                             e.stopPropagation(); 
                                             navigate(`/spots/new`);
-                                        }}>Create a New Spot</button>
+                                        }}>Create a New Spot</button></div>
+           
             {spots.length === 0 ? (
                 <p>You don&apos;t have any spots listed. Create a new spot!</p>
             ) : (
@@ -73,22 +74,26 @@ const ManageSpots = () => {
                             <div className="spotTile">
                                 <NavLink to={`/spots/${spot.id}`} className="spotLink">
 
-
-                                    <img
+                                <div className="manage-spots-image-container">  
+                                     <img
                                         className="imgLayout"
                                         src={spot.previewImage} 
                                         alt={spot.name}
                                     />
+                                    </div>
+                                 
                                     <div className="tooltip">{spot.name}</div>
                                 </NavLink>
+                                
 
-                                <div className="spotGridHeader">
+                                <div className="manage-spots-info-container">
+                                    <div className="spotGridHeader">
                                     <div className="location">{spot.city}, {spot.state}</div>
-                                    <div className="star">{starEmoji} {spot.starRating}</div>
+                                    <div className="star">{starEmoji} {spot.avgRating.toFixed(1)}</div>
                                 </div>
 
                                 <div className="spotGridDetails">
-                                    <p>${spot.price} per night</p>
+                                    <p>${spot.price} night</p>
                                 </div>
 
                                 <div className="spotButtons">
@@ -109,6 +114,8 @@ const ManageSpots = () => {
                                         Delete
                                     </button>
                                 </div>
+                                </div>
+                                
                             </div>
                         </div>
                     ))}
@@ -117,7 +124,7 @@ const ManageSpots = () => {
                 {/* only render when modalopen true  */}
             {isModalOpen && (
                 <div className="modal-overlay">
-                    
+
                     <div className="modal">
 
                         <h2>Confirm Delete</h2>

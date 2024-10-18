@@ -1,15 +1,21 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import {  submitReview } from '../../store/reviews';
+import ReviewModal from './ReviewModal';
 import './SpotDetail.css';
 
 const SpotDetails = () => {
     const { spotId } = useParams();
+    const dispatch = useDispatch();
     const [spot, setSpot] = useState(null);
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     
-   
+    const currentUser = useSelector((state) => state.session.user);
+
      
     // const currentUser = useSelector((state) => state.session.user);
 
@@ -18,7 +24,15 @@ const SpotDetails = () => {
         alert("Feature coming soon");
     };
 
-  
+
+    const handleReviewSubmit = (reviewText) => {
+        const reviewData = {
+            review: reviewText,
+            userId: currentUser.id,
+        };
+        dispatch(submitReview(spotId, reviewData));
+        setIsModalOpen(false); // Close modal after submission
+    };
 
     useEffect(() => {
         const fetchSpotDetails = async () => {
@@ -94,10 +108,10 @@ const SpotDetails = () => {
 
 
             <div className="detailsbody">
-
+                    
               <div className="leftdetails">
                     <div className="hostname">
-                       <h2>Hosted by: {spot.Owner.firstName}{spot.Owner.lastName}</h2>
+                       <h2>Hosted by {spot.Owner.firstName} {spot.Owner.lastName}</h2>
                      </div>
                   <div className="description">
                          <p>{spot.description}</p>
@@ -116,7 +130,7 @@ const SpotDetails = () => {
             <>
                 <span>{spot.avgStarRating.toFixed(1)} </span>
                 <span> • </span>
-                <span>{spot.numReviews} Review{spot.numReviews !== 1 ? 's' : ''}</span>
+                <span>{spot.numReviews} review{spot.numReviews !== 1 ? 's' : ''}</span>
             </>
             ) : (
             <span>New</span>
@@ -129,7 +143,7 @@ const SpotDetails = () => {
 
             </div>
 
-
+            <hr style={{ margin: '20px 0' }} />
 
             <div className="reviews-summary">
             <span role="img" aria-label="star">⭐</span>
@@ -137,12 +151,24 @@ const SpotDetails = () => {
              <>
             <span>{spot.avgStarRating.toFixed(1)} </span>
             <span> • </span>
-            <span>{spot.numReviews} Review{spot.numReviews !== 1 ? 's' : ''}</span>
+            <span>{spot.numReviews} review{spot.numReviews !== 1 ? 's' : ''}</span>
              </>
               ) : (
                  <span>New</span>
              )}
             </div>
+
+             <div className="review-modal">
+
+             {currentUser && spot.Owner.id !== currentUser.id &&(
+                <button onClick={() => setIsModalOpen(true)}>Post Your Review</button>
+            )}
+            <ReviewModal 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+                onSubmit={handleReviewSubmit} 
+            />
+             </div>
 
 
 
@@ -152,16 +178,18 @@ const SpotDetails = () => {
                     reviews.map(review => (
                         <div key={review.id} className="review">
                             <p>
-                                <strong>{review.User.firstName}</strong> - {new Date(review.createdAt).toLocaleString('default', { month: 'long', year: 'numeric' })}
+                                <strong>{review.User.firstName}</strong> 
                             </p>
+                            <p> {new Date(review.createdAt).toLocaleString('default', { month: 'long', year: 'numeric' })}</p>
                             <p>{review.review}</p>
                         </div>
                     ))
                 ) : (
-                    <p>Be the first to post a review!</p>
+                    <p className="first">Be the first to post a review!</p>
                 )}
             </div>
-            
+
+
         </div>
     );
     

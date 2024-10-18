@@ -47,3 +47,24 @@
 .modal h2 {
     margin-bottom: 10px; /* Space below title */
 }
+
+
+.manage-spots-image-container{
+    height:250px;
+}
+.manage-spots-info-container{
+    padding:10px;
+}
+.manage-spot-createbtn{
+    margin:15px;
+}
+
+.manage-spots-layout{
+    margin-right:3%;
+    margin-left:3%;
+}
+
+.manage-spots-layout h1{
+color:navy;
+}
+

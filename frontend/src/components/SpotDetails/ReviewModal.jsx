@@ -6,8 +6,8 @@ const ReviewModal = ({ isOpen, onClose, onSubmit }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         onSubmit(reviewText);
-        setReviewText(''); // Reset the input
-        onClose(); // Close the modal
+        setReviewText(''); 
+        onClose(); 
     };
 
     if (!isOpen) return null;

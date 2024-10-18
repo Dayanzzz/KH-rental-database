@@ -137,4 +137,9 @@ height: 50%;
 .detailsbody{
     display:flex;
     margin-top: 40px;
+
+}
+
+.first{
+    text-align: left;
 }
