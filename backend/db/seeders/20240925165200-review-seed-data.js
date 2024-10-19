@@ -11,7 +11,7 @@ module.exports = {
     await Review.bulkCreate( [
       {
         spotId: 1, // Tropical Paradise Retreat
-        userId: 3,
+        userId: 4,
         review: 'Had an amazing time at the Tropical Paradise Retreat! The beach was stunning, and the bungalow was cozy and comfortable. Perfect place for a getaway!',
         stars: 5.0,
       },
