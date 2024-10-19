@@ -14,17 +14,17 @@ function NewSpot() {
     const [state, setState] = useState('');
     const [country, setCountry] = useState('');
     const [price, setPrice] = useState('');
-    // const [previewImage, setPreviewImage] = useState('');
-    // const [imageUrls, setImageUrls] = useState(['', '', '', '']); 
+    const [previewImage, setPreviewImage] = useState('');
+    const [imageUrls, setImageUrls] = useState(['', '', '', '']); 
     const [latitude, setLatitude] = useState('');
     const [longitude, setLongitude] = useState('');
     const [errors, setErrors] = useState({}); // State for errors
 
-    // const handleImageChange = (index, value) => {
-    //     const newImageUrls = [...imageUrls];
-    //     newImageUrls[index] = value;
-    //     setImageUrls(newImageUrls);
-    // };
+    const handleImageChange = (index, value) => {
+        const newImageUrls = [...imageUrls];
+        newImageUrls[index] = value;
+        setImageUrls(newImageUrls);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -37,8 +37,8 @@ function NewSpot() {
             state,
             country,
             price:parseFloat(price),
-            // previewImage,
-            // imageUrls,
+            previewImage,
+            imageUrls,
             lat:parseFloat(latitude),
             lng: parseFloat(longitude),
         };
@@ -173,7 +173,7 @@ function NewSpot() {
                     </div>
                     {errors.price && <p className="error">{errors.price}</p>}
                 </label>
-                {/* <div className="photo-section">
+                <div className="photo-section">
                     <h2>Liven up your spot with photos</h2>
                     <p>Submit a link to at least one photo to publish your spot.</p>
                     <label>
@@ -197,7 +197,7 @@ function NewSpot() {
                             placeholder="Image URL"
                         />
                     ))}
-                </div> */}
+                </div>
                 <button type="submit">Create Spot</button>
             </form>
         </div>

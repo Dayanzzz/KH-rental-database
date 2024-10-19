@@ -24,10 +24,12 @@ const add = (spot) => ({
   type: ADD_SPOT,
   spot
 });
+
+
 const addSpotImages =(spotId, images)=>({
   type:ADD_SPOT_IMAGES,
   payload: {spotId,images},
-})
+});
 
 const remove = (spotId) => ({
   type: REMOVE_SPOT,
@@ -129,22 +131,22 @@ export const addSpot = (data) => async (dispatch, getState) => {
   }
 };
 
-//CREATE SPOT IMAGE 
-// export const createSpotImages = (spotId, imageUrls)=> async(dispatch)=>{
-//   const response = await fetch(`/api/spots/${spotId}`,{
-//     method: 'POST',
-//     headers: {
-//         'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify({ images: imageUrls }),
-//   })
-//   if (response.ok) {
-//     const images = await response.json();
-//     dispatch(addSpotImages(spotId, images));
-// } else {
-//     throw new Error('Failed to add images');
-// }
-// }
+
+export const createSpotImages = (spotId, imageUrls)=> async(dispatch)=>{
+  const response = await fetch(`/api/spots/${spotId}/images`,{
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ images: imageUrls }),
+  })
+  if (response.ok) {
+    const images = await response.json();
+    dispatch(addSpotImages(spotId, images));
+} else {
+    throw new Error('Failed to add images');
+}
+}
 
 const initialState = {};
 
@@ -166,15 +168,28 @@ const spotsReducer = (state = initialState, action) => {
       return newState;
     }
     case ADD_SPOT:
-    case UPDATE_SPOT: 
+    case UPDATE_SPOT: {
       return {
         ...state,
         [action.spot.id]: action.spot
       };
+    }
+    case ADD_SPOT_IMAGES: {
+      const { spotId, images } = action.payload;
+      const spot = state[spotId];
+      if (spot) {
+        return {
+          ...state,
+          [spotId]: {
+            ...spot,
+            images: [...(spot.images || []), ...images] // Add new images to existing ones
+          }
+        };
+      }
+      return state;
+    }
     default:
       return state;
   }
 };
-
-
 export default spotsReducer;
