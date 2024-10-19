@@ -156,7 +156,17 @@ const SpotDetails = () => {
 
                 <div className="rightdetails">
                     <div className="callout-box">
-                        <h3>Price: ${spot.price.toFixed(2)} night</h3>
+                        <h3>${spot.price.toFixed(2)} night</h3>
+                        <p>
+                            <span role="img" aria-label="star">⭐</span>
+                            <span>{spot.numReviews > 0 ? spot.avgStarRating.toFixed(1) : "New"}</span>
+                            {spot.numReviews > 0 && (
+                                <>
+                                    <span> • </span>
+                                    <span>{spot.numReviews} Review{spot.numReviews !== 1 ? 's' : ''}</span>
+                                </>
+                            )}
+                        </p>
                         <button onClick={handleReserveClick}>Reserve</button>
                     </div>
                 </div>

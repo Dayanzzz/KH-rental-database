@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import {useModal} from '../../context/Modal';
 import './LoginForm.css';
 
+
 function LoginFormModal() {
 //DEMO USER CAN POSSIBLY TAKE OUT 
   const handleDemoLogin = () => {
@@ -81,3 +82,4 @@ const login = (username, password) => {
 }
 
 export default LoginFormModal;
+
