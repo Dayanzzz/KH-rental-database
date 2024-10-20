@@ -4,8 +4,9 @@ export const LOAD_REVIEWS = "reviews/LOAD_REVIEWS";
 export const ADD_REVIEW = "reviews/ADD_REVIEW";
 export const REMOVE_REVIEW = "reviews/REMOVE_REVIEW";
 
-const loadReviews = (reviews) => ({
+const loadReviews = (spotId,reviews) => ({
     type: LOAD_REVIEWS,
+    spotId,
     reviews,
 });
 
@@ -21,37 +22,35 @@ const remove = (reviewId, spotId) => ({
     reviewId,
 });
 
-const isLoggedIn = (state) => {
-    return state.session.user !== null; 
-};
+// const isLoggedIn = (state) => {
+//     return state.session.user !== null; 
+// };
 
 export const getSpotReviews = (spotId) => async (dispatch) => {
     const response = await csrfFetch(`/api/spots/${spotId}/reviews`);
 
     if (response.ok) {
         const reviews = await response.json();
+        console.log('Fetched reviews:',reviews);
         dispatch(loadReviews(reviews));
     } else {
         console.error("Failed to load reviews:", response);
     }
 };
 
-export const removeReview = (reviewId, spotId) => async (dispatch, getState) => {
-    const state = getState();
-    if (!isLoggedIn(state)) {
-        alert("You must be logged in to remove a review.");
-        return;
-    }
-    
+export const removeReview = (reviewId, spotId) => async (dispatch) => {
     console.log("Attempting to delete review with ID:", reviewId, "for spot ID:", spotId);
     const response = await csrfFetch(`/api/reviews/${reviewId}`, {
         method: 'DELETE'
     });
 
     if (response.ok) {
-        dispatch(remove(reviewId, spotId));
+        const data = await response.json();
+        dispatch(remove(spotId, reviewId));
+        return { ok: true, data }; // Return an object with an ok property
     } else {
-        console.error("Failed to delete review:", response);
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to delete review');
     }
 };
 
@@ -67,6 +66,7 @@ export const submitReview = (spotId, reviewData) => async (dispatch) => {
     if (response.ok) {
         const newReview = await response.json();
         dispatch(addReview(spotId, newReview));
+        return newReview;
     } else {
         console.error("Failed to submit review:", response);
     }

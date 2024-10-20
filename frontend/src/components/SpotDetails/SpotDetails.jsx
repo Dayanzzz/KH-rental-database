@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { submitReview, removeReview } from '../../store/reviews';
 import ReviewModal from './ReviewModal';
-import DeleteReviewModal from './DeleteReviewModal';
+
 import './SpotDetail.css';
 
 const SpotDetails = () => {
@@ -16,7 +16,7 @@ const SpotDetails = () => {
     const [reviewToDelete, setReviewToDelete] = useState(null); // State for the review to delete
 
     const currentUser = useSelector((state) => state.session.user);
-    console.log("Current User:", currentUser); // Log the current user
+    console.log("Current User:", currentUser); 
 
     const handleReserveClick = () => {
         alert("Feature coming soon");
@@ -36,7 +36,8 @@ const SpotDetails = () => {
 
     const handleDeleteReview = (reviewId) => {
         console.log("Deleting review ID:", reviewId); // Log review ID to delete
-        setReviewToDelete(reviewId); // Set review ID for confirmation
+        setReviewToDelete(reviewId);
+        setIsModalOpen(true) // Set review ID for confirmation
     };
 
 
@@ -45,69 +46,40 @@ const SpotDetails = () => {
     
     const confirmDeleteReview = async () => {
         if (reviewToDelete) {
-            const reviewToDeleteData = reviews.find(review => review.id === reviewToDelete);
-            
-            if (reviewToDeleteData && reviewToDeleteData.userId === currentUser.id) {
-                try {
-                    // Dispatch the delete action
-                    const response = await dispatch(removeReview(reviewToDelete, spotId));
-        
-                    if (response && response.ok) {
-                        console.log("Review deleted successfully");
-                        
-                        // Optionally refetch the reviews after deletion
-                        const reviewsResponse = await fetch(`/api/spots/${spotId}/reviews`);
-                        if (!reviewsResponse.ok) {
-                            throw new Error('Failed to fetch updated reviews');
-                        }
-                        const updatedReviewsData = await reviewsResponse.json();
-                        setReviews(updatedReviewsData.Reviews); // Update reviews with the latest data
-                    } else {
-                        const errorData = await response.json();
-                        console.error("Failed to delete review:", errorData.message);
-                        alert(`Error: ${errorData.message}`);
-                    }
-                } catch (error) {
-                    console.error("Error during delete operation:", error);
-                    alert("An unexpected error occurred.");
-                }
-            } else {
-                alert("You are not authorized to delete this review.");
+            const response = await dispatch(removeReview(spotId,reviewToDelete));
+            if (response.ok) {
+                // Optionally refetch the reviews after deletion
+                const updatedReviewsResponse = await fetch(`/api/spots/${spotId}/reviews`);
+                const updatedReviewsData = await updatedReviewsResponse.json();
+                setReviews(updatedReviewsData.Reviews); // Update reviews with the latest data
             }
-            
-            setReviewToDelete(null);
         }
+        setReviewToDelete(null);
+        setIsModalOpen(false);
     };
 
     const cancelDeleteReview = () => {
-        setReviewToDelete(null); // Close confirmation modal
+        setReviewToDelete(null); 
+        setIsModalOpen(false);
     };
 
     useEffect(() => {
         const fetchSpotDetails = async () => {
             try {
                 const response = await fetch(`/api/spots/${spotId}`);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch spot details');
-                }
                 const data = await response.json();
-                console.log("Spot Data:", data); // Log the spot data
                 setSpot(data);
 
                 const reviewsResponse = await fetch(`/api/spots/${spotId}/reviews`);
-                if (!reviewsResponse.ok) {
-                    throw new Error('Failed to fetch reviews');
-                }
                 const reviewsData = await reviewsResponse.json();
-                console.log("Reviews Data:", reviewsData); // Log the reviews data
                 setReviews(reviewsData.Reviews);
-
             } catch (error) {
                 console.error("Error fetching spot details or reviews:", error);
             } finally {
                 setLoading(false);
             }
         };
+
 
         fetchSpotDetails();
     }, [spotId]);
@@ -221,12 +193,20 @@ const SpotDetails = () => {
 
             {/* Delete Review Confirmation Modal */}
             {reviewToDelete && (
-                <DeleteReviewModal
-                    title="Confirm Delete"
-                    message="Are you sure you want to delete this review?"
-                    onConfirm={confirmDeleteReview}
-                    onCancel={cancelDeleteReview}
-                />
+                <div className="modal-overlay">
+                    <div className="modal">
+                        <h2>Confirm Delete</h2>
+                        <p>Are you sure you want to delete this review?</p>
+                        <div className="modal-buttons">
+                            <button className="delete-button" onClick={confirmDeleteReview}>
+                                Yes (Delete Review)
+                            </button>
+                            <button className="cancel-button" onClick={cancelDeleteReview}>
+                                No (Keep Review)
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );
