@@ -47,7 +47,7 @@ export const removeReview = (reviewId, spotId) => async (dispatch) => {
     if (response.ok) {
         const data = await response.json();
         dispatch(remove(spotId, reviewId));
-        return { ok: true, data }; // Return an object with an ok property
+        return { ok: true, data }; 
     } else {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to delete review');

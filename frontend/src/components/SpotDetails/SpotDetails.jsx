@@ -13,8 +13,9 @@ const SpotDetails = () => {
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [reviewToDelete, setReviewToDelete] = useState(null); // State for the review to delete
-
+    const [reviewToDelete, setReviewToDelete] = useState(null); 
+    const [hasReviewed, setHasReviewed] = useState(false);
+    
     const currentUser = useSelector((state) => state.session.user);
     console.log("Current User:", currentUser); 
 
@@ -22,22 +23,34 @@ const SpotDetails = () => {
         alert("Feature coming soon");
     };
 
-    const handleReviewSubmit = async (reviewText) => {
-        const reviewData = {
-            review: reviewText,
-            userId: currentUser.id,
+    const handleReviewSubmit = async (reviewData) => {
+        const reviewPayload = {
+            review: reviewData.review,
+            stars: reviewData.stars,
         };
-        console.log("Submitting review:", reviewData); // Log review submission data
-        const newReview = await dispatch(submitReview(spotId, reviewData));
-        console.log("New Review Submitted:", newReview); // Log the new review
-        setReviews([...reviews, newReview]); // Update the reviews state with the new review
-        setIsModalOpen(false); // Close modal after submission
+        
+        const newReview = await dispatch(submitReview(spotId, reviewPayload));
+        
+        if (newReview && newReview.User) {
+          
+            setReviews([...reviews, newReview]);
+        } else {
+        
+            const updatedReviewsResponse = await fetch(`/api/spots/${spotId}/reviews`);
+            const updatedReviewsData = await updatedReviewsResponse.json();
+            setReviews(updatedReviewsData.Reviews);
+        }
+        
+        setIsModalOpen(false);
     };
 
+
+
+
     const handleDeleteReview = (reviewId) => {
-        console.log("Deleting review ID:", reviewId); // Log review ID to delete
+        console.log("Deleting review ID:", reviewId); 
         setReviewToDelete(reviewId);
-        setIsModalOpen(true) // Set review ID for confirmation
+        setIsModalOpen(true) 
     };
 
 
@@ -46,12 +59,12 @@ const SpotDetails = () => {
     
     const confirmDeleteReview = async () => {
         if (reviewToDelete) {
-            const response = await dispatch(removeReview(spotId,reviewToDelete));
+            const response = await dispatch(removeReview(reviewToDelete, spotId));
             if (response.ok) {
-                // Optionally refetch the reviews after deletion
+                
                 const updatedReviewsResponse = await fetch(`/api/spots/${spotId}/reviews`);
                 const updatedReviewsData = await updatedReviewsResponse.json();
-                setReviews(updatedReviewsData.Reviews); // Update reviews with the latest data
+                setReviews(updatedReviewsData.Reviews); 
             }
         }
         setReviewToDelete(null);
@@ -73,6 +86,10 @@ const SpotDetails = () => {
                 const reviewsResponse = await fetch(`/api/spots/${spotId}/reviews`);
                 const reviewsData = await reviewsResponse.json();
                 setReviews(reviewsData.Reviews);
+                const userReview = reviewsData.Reviews.find(review => review.User.id === currentUser.id);
+                setHasReviewed(!!userReview);
+
+
             } catch (error) {
                 console.error("Error fetching spot details or reviews:", error);
             } finally {
@@ -82,7 +99,7 @@ const SpotDetails = () => {
 
 
         fetchSpotDetails();
-    }, [spotId]);
+    }, [spotId, currentUser]);
 
     if (loading) {
         return <div>Loading...</div>;
@@ -161,7 +178,7 @@ const SpotDetails = () => {
 
             {/* Review Modal */}
             <div className="review-modal">
-                {currentUser && spot.Owner.id !== currentUser.id && (
+                {currentUser && spot.Owner.id !== currentUser.id && !hasReviewed && (
                     <button onClick={() => setIsModalOpen(true)}>Post Your Review</button>
                 )}
                 <ReviewModal 

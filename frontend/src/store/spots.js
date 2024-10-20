@@ -5,7 +5,7 @@ export const LOAD_SPOTS = "spots/LOAD_SPOTS";
 export const UPDATE_SPOT = "spots/UPDATE_SPOT";
 export const REMOVE_SPOT = "spots/REMOVE_SPOT";
 export const ADD_SPOT = "spots/ADD_SPOT";
-export const ADD_SPOT_IMAGES="spot/ADD_SPOT_IMAGES";
+export const ADD_SPOT_IMAGE="spots/ADD_SPOT_IMAGE";
 
 const load = (spots) => {
     console.log('Dispatching load action with spots:', spots);
@@ -26,9 +26,9 @@ const add = (spot) => ({
 });
 
 
-const addSpotImages =(spotId, images)=>({
-  type:ADD_SPOT_IMAGES,
-  payload: {spotId,images},
+const addSpotImage =(image)=>({
+  type:ADD_SPOT_IMAGE,
+ image,
 });
 
 const remove = (spotId) => ({
@@ -121,32 +121,44 @@ export const addSpot = (data) => async (dispatch, getState) => {
   if (response.ok) {
     const spot = await response.json();
     dispatch(add(spot));
+
+    if (data.imageUrls && data.imageUrls.length > 0) {
+      await dispatch(uploadSpotImage(spot.id, data.imageUrls));
+  }
+
+  
     return spot;
   }
   //adding this else statement
   else {
     const errorData = await response.json();
-    console.error('Error creating spot:', errorData); // Log error details
-    throw new Error('Failed to create spot'); // Throw an error for further handling
+    console.error('Error creating spot:', errorData); 
+    throw new Error('Failed to create spot'); 
   }
 };
 
 
-export const createSpotImages = (spotId, imageUrls)=> async(dispatch)=>{
-  const response = await fetch(`/api/spots/${spotId}/images`,{
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ images: imageUrls }),
-  })
-  if (response.ok) {
-    const images = await response.json();
-    dispatch(addSpotImages(spotId, images));
-} else {
-    throw new Error('Failed to add images');
-}
-}
+export const uploadSpotImage = (spotId, imageUrls) => async (dispatch) => {
+  const promises = imageUrls.map((url) => 
+      csrfFetch(`/api/spots/${spotId}/images`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ url, preview: false }), 
+      })
+  );
+
+  try {
+      const responses = await Promise.all(promises);
+      const newImages = await Promise.all(responses.map(res => res.json()));
+      newImages.forEach(newImage => {
+          dispatch(addSpotImage(newImage));
+      });
+  } catch (error) {
+      throw new Error(error.message || 'Failed to upload images');
+  }
+};
 
 const initialState = {};
 
@@ -174,20 +186,14 @@ const spotsReducer = (state = initialState, action) => {
         [action.spot.id]: action.spot
       };
     }
-    case ADD_SPOT_IMAGES: {
-      const { spotId, images } = action.payload;
-      const spot = state[spotId];
-      if (spot) {
-        return {
-          ...state,
-          [spotId]: {
-            ...spot,
-            images: [...(spot.images || []), ...images] // Add new images to existing ones
-          }
-        };
-      }
-      return state;
-    }
+    case ADD_SPOT_IMAGE:  return {
+      ...state,
+      [action.image.spotId]: {
+          ...state[action.image.spotId],
+          images: [...(state[action.image.spotId]?.images || []), action.image],
+      },
+  };
+   
     default:
       return state;
   }
