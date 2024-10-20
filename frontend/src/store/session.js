@@ -2,6 +2,7 @@ import { csrfFetch } from './csrf';
 
 const SET_USER = "session/setUser";
 const REMOVE_USER = "session/removeUser";
+const LOGIN_DEMO_USER = "session/loginDemoUser";
 
 const setUser = (user) => {
   return {
@@ -13,6 +14,13 @@ const setUser = (user) => {
 const removeUser = () => {
   return {
     type: REMOVE_USER
+  };
+};
+
+const loginDemoUser = (user) => {
+  return {
+    type: LOGIN_DEMO_USER,
+    payload: user,
   };
 };
 
@@ -38,12 +46,37 @@ export const restoreUser = () => async (dispatch) => {
   };
   
   
+
+
+  export const demoLogin = () => async (dispatch) => {
+    const demoCredentials = {
+      credential: 'Demo', 
+      password: 'passwordDemo', 
+    };
+  
+    const response = await csrfFetch("/api/session", {
+      method: "POST",
+      body: JSON.stringify(demoCredentials),
+    });
+  
+    if (response.ok) {
+      const data = await response.json();
+      dispatch(loginDemoUser(data.user)); 
+    } else {
+      console.error("Demo login failed");
+    }
+  };
+
+
+
+
 const initialState = { user: null };
 
 const sessionReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_USER:
-      return { ...state, user: action.payload };
+      case LOGIN_DEMO_USER:
+        return { ...state, user: action.payload };
     case REMOVE_USER:
       return { ...state, user: null };
     default:

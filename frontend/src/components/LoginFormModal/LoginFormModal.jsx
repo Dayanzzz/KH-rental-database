@@ -9,23 +9,33 @@ import './LoginForm.css';
 
 function LoginFormModal() {
 //DEMO USER CAN POSSIBLY TAKE OUT 
-  const handleDemoLogin = () => {
-    const demoCredentials = {
-        username: 'demoUser',
-        password: 'demoPassword'
-    };
-    login(demoCredentials.username, demoCredentials.password);
-};
-const login = (username, password) => {
-  console.log(`Logging in with: ${username}, ${password}`);
-  alert(`Logged in as ${username}`);
-};
+//   const handleDemoLogin = () => {
+//     const demoCredentials = {
+//         username: 'demoUser',
+//         password: 'demoPassword'
+//     };
+//     login(demoCredentials.username, demoCredentials.password);
+// };
+// const login = (username, password) => {
+//   console.log(`Logging in with: ${username}, ${password}`);
+//   alert(`Logged in as ${username}`);
+// };
 ///////////////////////////////////////////////////
   const dispatch = useDispatch();
   const [credential, setCredential] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
+
+  const handleDemoLogin = async () => {
+    try {
+      await dispatch(sessionActions.demoLogin()); 
+      closeModal();
+    } catch (error) {
+      console.error("Demo login failed", error);
+    }
+  };
+
 
   const handleSubmit = (e) => {
     e.preventDefault();

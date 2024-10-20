@@ -23,7 +23,7 @@ function SpotsLayout() {
             <div className="row">
                 {spots.map(spot => { 
                     const averageRating = spot.avgRating ? spot.avgRating.toFixed(1) : 'New';
-               
+                    //  const previewImage = spot.SpotImages.length > 0 ? spot.SpotImages[0].url
                     
                     return (
                     <div className="column" key={spot.id}>

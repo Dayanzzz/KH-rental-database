@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { addSpot } from '../../store/spots'; 
 import { useNavigate } from 'react-router-dom';
 import { uploadSpotImage } from '../../store/spots';
-
+import './NewSpot.css'
 
 function NewSpot() {
     const dispatch = useDispatch(); 
@@ -103,7 +103,7 @@ function NewSpot() {
 
 
             if (result && result.id) {
-                await dispatch(uploadSpotImage(result.id, imageUrls));
+                await dispatch(uploadSpotImage(result.id, imageUrls, previewImage));
                 alert('Spot created successfully!');
                 navigate(`/spots/${result.id}`);
             } else {

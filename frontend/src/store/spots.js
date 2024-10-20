@@ -138,26 +138,44 @@ export const addSpot = (data) => async (dispatch, getState) => {
 };
 
 
-export const uploadSpotImage = (spotId, imageUrls) => async (dispatch) => {
-  const promises = imageUrls.map((url) => 
-      csrfFetch(`/api/spots/${spotId}/images`, {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ url, preview: false }), 
-      })
-  );
+export const uploadSpotImage = (spotId, imageUrls, previewImage) => async (dispatch) => {
+  if (previewImage) {
+    try {
+        const response = await csrfFetch(`/api/spots/${spotId}/images`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ url: previewImage, preview: true }), // Set this as preview
+        });
 
-  try {
-      const responses = await Promise.all(promises);
-      const newImages = await Promise.all(responses.map(res => res.json()));
-      newImages.forEach(newImage => {
-          dispatch(addSpotImage(newImage));
-      });
-  } catch (error) {
-      throw new Error(error.message || 'Failed to upload images');
-  }
+        const newPreviewImage = await response.json();
+        dispatch(addSpotImage(newPreviewImage)); // Dispatch the preview image
+    } catch (error) {
+        throw new Error(error.message || 'Failed to upload preview image');
+    }
+}
+
+// Now handle the rest of the images
+const promises = imageUrls.map((url) => 
+    csrfFetch(`/api/spots/${spotId}/images`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url, preview: false }), // Other images are not previews
+    })
+);
+
+try {
+    const responses = await Promise.all(promises);
+    const newImages = await Promise.all(responses.map(res => res.json()));
+    newImages.forEach(newImage => {
+        dispatch(addSpotImage(newImage)); // Dispatch each new image
+    });
+} catch (error) {
+    throw new Error(error.message || 'Failed to upload additional images');
+}
 };
 
 const initialState = {};
