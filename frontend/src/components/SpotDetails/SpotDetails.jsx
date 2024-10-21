@@ -17,7 +17,7 @@ const SpotDetails = () => {
     const [hasReviewed, setHasReviewed] = useState(false);
     
     const currentUser = useSelector((state) => state.session.user);
-    console.log("Current User:", currentUser); 
+    // console.log("Current User:", currentUser); 
 
     const handleReserveClick = () => {
         alert("Feature coming soon");
@@ -30,17 +30,38 @@ const SpotDetails = () => {
         };
         
         const newReview = await dispatch(submitReview(spotId, reviewPayload));
+    
+    if (newReview && newReview.User) {
+        const updatedReviews = [...reviews, newReview];
         
-        if (newReview && newReview.User) {
-          
-            setReviews([...reviews, newReview]);
-        } else {
+        // Calculate the new average star rating
+        const totalStars = updatedReviews.reduce((sum, review) => sum + review.stars, 0);
+        const avgStarRating = updatedReviews.length > 0 ? (totalStars / updatedReviews.length).toFixed(1) : 0; // Default to 0 if no reviews
         
-            const updatedReviewsResponse = await fetch(`/api/spots/${spotId}/reviews`);
-            const updatedReviewsData = await updatedReviewsResponse.json();
-            setReviews(updatedReviewsData.Reviews);
-        }
+        setReviews(updatedReviews);
+        setSpot(prevSpot => ({
+            ...prevSpot,
+            avgStarRating: Number(avgStarRating), // Ensure avgStarRating is a number
+            numReviews: updatedReviews.length,
+        }));
+        setHasReviewed(true);
+    } else {
+        const updatedReviewsResponse = await fetch(`/api/spots/${spotId}/reviews`);
+        const updatedReviewsData = await updatedReviewsResponse.json();
+        setReviews(updatedReviewsData.Reviews);
         
+        const totalStars = updatedReviewsData.Reviews.reduce((sum, review) => sum + review.stars, 0);
+        const avgStarRating = updatedReviewsData.Reviews.length > 0 ? (totalStars / updatedReviewsData.Reviews.length).toFixed(1) : 0; // Default to 0
+        
+        setSpot(prevSpot => ({
+            ...prevSpot,
+            avgStarRating: Number(avgStarRating), 
+            numReviews: updatedReviewsData.Reviews.length,
+        }));
+        const userReview = updatedReviewsData.Reviews.find(review => review.User.id === currentUser.id);
+        setHasReviewed(!!userReview);
+    }
+    
         setIsModalOpen(false);
     };
 
@@ -48,7 +69,7 @@ const SpotDetails = () => {
 
 
     const handleDeleteReview = (reviewId) => {
-        console.log("Deleting review ID:", reviewId); 
+        // console.log("Deleting review ID:", reviewId); 
         setReviewToDelete(reviewId);
         setIsModalOpen(true) 
     };
@@ -61,10 +82,21 @@ const SpotDetails = () => {
         if (reviewToDelete) {
             const response = await dispatch(removeReview(reviewToDelete, spotId));
             if (response.ok) {
+                const updatedReviews = reviews.filter(review => review.id !== reviewToDelete);
+                setReviews(updatedReviews);
                 
-                const updatedReviewsResponse = await fetch(`/api/spots/${spotId}/reviews`);
-                const updatedReviewsData = await updatedReviewsResponse.json();
-                setReviews(updatedReviewsData.Reviews); 
+                // Calculate the new average star rating
+                const totalStars = updatedReviews.reduce((sum, review) => sum + review.stars, 0);
+                const avgStarRating = updatedReviews.length > 0 ? (totalStars / updatedReviews.length).toFixed(1) : 0; // Default to 0 if no reviews
+                
+                // Update the spot's state with the new average rating and review count
+                setSpot(prevSpot => ({
+                    ...prevSpot,
+                    avgStarRating: Number(avgStarRating), // Ensure avgStarRating is a number
+                    numReviews: updatedReviews.length,
+                }));
+                const userHasReviews = updatedReviews.some(review => review.User.id === currentUser.id);
+                setHasReviewed(userHasReviews); // Update hasReviewed state
             }
         }
         setReviewToDelete(null);

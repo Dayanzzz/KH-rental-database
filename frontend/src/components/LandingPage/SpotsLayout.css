@@ -117,3 +117,7 @@ color:navy;
 .spotslayout-infocontainer{
   padding:10px;
 }
+
+.spotGrid-price{
+  font-weight: 700;
+}

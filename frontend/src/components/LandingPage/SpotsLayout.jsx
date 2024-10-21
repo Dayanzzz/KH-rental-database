@@ -16,7 +16,7 @@ function SpotsLayout() {
         dispatch(getSpots()); 
     }, [dispatch]);
 
-    console.log(spots);
+    // console.log(spots);
 
     return (
         <>
@@ -48,7 +48,8 @@ function SpotsLayout() {
                                  </div>
 
                                 <div className="spotGridDetails">
-                                     <p>${spot.price} night</p>
+                                     <p>
+                                        <span className="spotGrid-price">${spot.price.toFixed(2)}</span> night</p>
                                 </div>
                             </div>
                         </NavLink>

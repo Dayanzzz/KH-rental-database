@@ -8,6 +8,7 @@ ul {
     background-color: white;
     box-shadow: 1px 1px 1px #000000;
     padding: 10px 20px; /* Padding for the navbar */
+    justify-content: space-between;
   }
   
   li {

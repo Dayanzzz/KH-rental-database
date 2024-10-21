@@ -7,13 +7,13 @@ export const REMOVE_SPOT = "spots/REMOVE_SPOT";
 export const ADD_SPOT = "spots/ADD_SPOT";
 export const ADD_SPOT_IMAGE="spots/ADD_SPOT_IMAGE";
 
-const load = (spots) => {
-    console.log('Dispatching load action with spots:', spots);
-    return {
+const load = (spots) => ({
+    // console.log('Dispatching load action with spots:', spots);
+    // return {
         type: LOAD_SPOTS,
         spots: spots.Spots
-    };
-};
+    });
+
 
 const update = (spot) => ({
   type: UPDATE_SPOT,
@@ -53,7 +53,7 @@ export const getSpots = () => async (dispatch) => {
   const response = await fetch('/api/spots');
   if (response.ok) {
     const spots = await response.json();
-    console.log('Fetched spots:',spots);
+    // console.log('Fetched spots:',spots);
     dispatch(load(spots));
   }
 };
@@ -177,7 +177,7 @@ try {
     const responses = await Promise.all(promises);
     const newImages = await Promise.all(responses.map(res => res.json()));
     newImages.forEach(newImage => {
-      console.log('Dispatching ADD_SPOT_IMAGE for spotId:', spotId);
+      // console.log('Dispatching ADD_SPOT_IMAGE for spotId:', spotId);
         dispatch(addSpotImage(newImage,spotId)); 
     });
 } catch (error) {
