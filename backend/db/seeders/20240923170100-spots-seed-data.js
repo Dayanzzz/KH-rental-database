@@ -69,7 +69,7 @@ module.exports = {
         lat: 31.6295,
         lng: -7.9811,
         name: "Agrabah Bazaar Stay",
-        description: "Experience the magic of Marrakech with a stay in a vibrant riad near the bustling markets. Enjoy views of the lively street below and the stunning Atlas Mountains in the distance. The beautifully decorated bedroom offers a cozy retreat, while the traditional Moroccan bathroom features intricate tile work.",
+        description: "Experience the magic of Marrakech with a stay in a vibrant riad near the bustling markets. Enjoy views of the lively street below and the stunning Atlas Mountains in the distance.",
         price: 150.00
       },
       {
@@ -81,7 +81,7 @@ module.exports = {
         lat: 21.1743,
         lng: -86.8515,
         name: "Neverland Beach House",
-        description: "A tropical beach house with stunning ocean views, perfect for families and fun-filled adventures. The spacious bedrooms are designed for comfort, with large windows overlooking the beach. The modern kitchen is perfect for family meals, and the bathroom includes a walk-in shower.",
+        description: "A tropical beach house with stunning ocean views, perfect for families and fun-filled adventures.",
         price: 220.00
       },
       {
@@ -93,7 +93,7 @@ module.exports = {
         lat: -45.0312,
         lng: 168.6625,
         name: "Departure Lodge",
-        description: "A luxurious lodge with breathtaking views of Lake Wakatipu and the surrounding mountains. Each bedroom offers expansive views and elegant furnishings. The fully equipped kitchen allows for home-cooked meals, and the bathroom includes a spa tub for relaxation.",
+        description: "A luxurious lodge with breathtaking views of Lake Wakatipu and the surrounding mountains.",
         price: 250.00
       },
       {
@@ -105,7 +105,7 @@ module.exports = {
         lat: 35.0844,
         lng: -106.6504,
         name: "Graveyard Oasis",
-        description: "A unique desert retreat featuring stunning landscapes and a tranquil atmosphere. The cozy bedrooms provide a serene escape, and the kitchen is perfect for preparing meals with local ingredients. The bathroom is equipped with modern fixtures and offers a relaxing ambiance.",
+        description: "A unique desert retreat featuring stunning landscapes and a tranquil atmosphere.",
         price: 130.00
       },
       {
@@ -117,7 +117,7 @@ module.exports = {
         lat: 37.9838,
         lng: 23.7650,
         name: "Coliseum View Apartments",
-        description: "Modern apartments with stunning views of the iconic Coliseum and city landmarks. Each apartment features stylish bedrooms, a fully equipped kitchen, and a modern bathroom. Step out onto the balcony for panoramic views and explore nearby historical sites, cafes, and shops within walking distance.",
+        description: "Modern apartments with stunning views of the iconic Coliseum and city landmarks. Each apartment features stylish bedrooms, a fully equipped kitchen, and a modern bathroom.",
         price: 170.00
       },
       {
@@ -129,7 +129,7 @@ module.exports = {
         lat: 55.9533,
         lng: -3.1883,
         name: "Castle Stay",
-        description: "Stay in a historic castle in the heart of Edinburgh, rich with history and stunning architecture. Enjoy views of the city skyline from your bedroom, which combines classic charm with modern amenities. The kitchen is equipped for self-catering, while the luxurious bathroom features a clawfoot tub.",
+        description: "Stay in a historic castle in the heart of Edinburgh, rich with history and stunning architecture.",
         price: 280.00
       },
       {
@@ -141,7 +141,7 @@ module.exports = {
         lat: 48.6360,
         lng: -1.5114,
         name: "Enchanted Garden Retreat",
-        description: "Experience the charm of Mont Saint-Michel with a stay in this picturesque retreat. The cozy bedrooms offer views of the beautiful gardens, and the kitchen is perfect for preparing breakfast. The bathroom features elegant decor and modern amenities.",
+        description: "Experience the charm of Mont Saint-Michel with a stay in this picturesque retreat. The cozy bedrooms offer views of the beautiful gardens, and the kitchen is perfect for preparing breakfast.",
         price: 140.00
       },
       {
@@ -153,7 +153,7 @@ module.exports = {
         lat: 64.1355,
         lng: -21.8174,
         name: "Shadow Realm Lodge",
-        description: "Immerse yourself in the mystical atmosphere of Iceland with this unique lodge. Cloaks are included for your adventures! Enjoy stunning views of the surrounding landscape from your bedroom, which is designed for comfort.",
+        description: "Immerse yourself in the mystical atmosphere of Iceland with this unique lodge. Cloaks are included for your adventures!",
         price: 160.00
       },
     ], { validate: true });
