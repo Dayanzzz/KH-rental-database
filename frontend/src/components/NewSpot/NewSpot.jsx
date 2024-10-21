@@ -91,118 +91,138 @@ function NewSpot() {
     };
 
     return (
-        <div className="new-spot">
+        <center><div className="new-spot">
             <h1>Create a New Spot</h1>
-            <h2>Where&apos;s your place located?</h2>
+            <h2 className="where">Where&apos;s your place located?</h2>
             <p>Guests will only get your exact address once they booked a reservation.</p>
             <form onSubmit={handleSubmit}>
 
                 <label>
-                    Country:
+                    Country
                     <input
                         type="text"
                         value={country}
                         onChange={(e) => setCountry(e.target.value)}
+                        placeholder='Country'
                     />
                     {errors.country && <p className="error">{errors.country}</p>}
                 </label>
 
                 <label>
-                    Address:
+                    Street Address
                     <input
                         type="text"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
+                        placeholder='Address'
                     />
                     {errors.address && <p className="error">{errors.address}</p>}
                 </label>
-
-                <label>
-                    City:
+            <div className="citystate">    
+                    <label className="city">
+                    City
                     <input
                         type="text"
                         value={city}
                         onChange={(e) => setCity(e.target.value)}
+                        placeholder='City'
                     />
                     {errors.city && <p className="error">{errors.city}</p>}
                 </label>
-
-                <label>
-                    State:
+<p className="comma">,</p>
+                <label className="state">
+                     State
                     <input
                         type="text"
                         value={state}
                         onChange={(e) => setState(e.target.value)}
+                        placeholder='STATE'
                     />
                     {errors.state && <p className="error">{errors.state}</p>}
                 </label>
-
-                <label>
-                    Latitude:
+</div>
+        <div className="latlng">
+        <label className="lat">
+                    Latitude
                     <input
                         type="text"
                         value={latitude}
                         onChange={(e) => setLatitude(e.target.value)}
+                        placeholder='Latitude'
                     />
                     {errors.latitude && <p className="error">{errors.latitude}</p>}
                 </label>
-
-                <label>
-                    Longitude:
+            <p className="comma">,</p>
+                <label className="lng">
+                     Longitude
                     <input
                         type="text"
                         value={longitude}
                         onChange={(e) => setLongitude(e.target.value)}
+                        placeholder='Longitude'
                     />
                     {errors.longitude && <p className="error">{errors.longitude}</p>}
                 </label>
 
+        </div>
+                
                 <label>
-                    Describe your place to guests:
+                    <h2 className="where">Describe your place to guests</h2>
+                    <p>Mention the best features of your space, any special amenities like fast wifi or parking, and what you love about the neighborhood.</p>
+                    
+
                     <textarea
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
+                        placeholder='Please write at least 30 characters'
                     />
                     {errors.description && <p className="error">{errors.description}</p>}
                 </label>
 
                 <label>
-                    Create a title for your spot:
+                    <h2 className="where">Create a title for your spot</h2>
+                    <p>Catch guests&apos; attention with a spot title that highlights what makes your place special.</p>
+                    
                     <input
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
+                        placeholder='Name of your spot'
                     />
                     {errors.name && <p className="error">{errors.name}</p>}
                 </label>
 
                 <label>
-                    Set a base price for your spot:
+                    <h2 className="where">Set a base price for your spot</h2>
+                    <p>Competitive pricing can help your listing stand out and rank higher in search results.</p>
+                    
                     <div>
                         <span>$</span>
                         <input
                             type="number"
                             value={price}
                             onChange={(e) => setPrice(e.target.value)}
+                            placeholder='Price per night (USD)'
                         />
                     </div>
                     {errors.price && <p className="error">{errors.price}</p>}
                 </label>
 
                 <div className="photo-section">
-                    <h2>Liven up your spot with photos</h2>
+                    <h2 className="where">Liven up your spot with photos</h2>
                     <p>Submit a link to at least one photo to publish your spot.</p>
                     <label>
-                        Preview Image URL:
+                       
                         <input
                             type="text"
                             value={previewImage}
                             onChange={(e) => setPreviewImage(e.target.value)}
+                            placeholder='Preview Image URL'
                         />
                         {errors.previewImage && <p className="error">{errors.previewImage}</p>}
                     </label>
 
-                    <label>Image URLs:</label>
+                  
                     {imageUrls.map((url, index) => (
                         <div key={index}>
                             <input
@@ -218,9 +238,10 @@ function NewSpot() {
                     ))}
                 </div>
 
-                <button type="submit">Create Spot</button>
+                <button className="createbtn" type="submit">Create Spot</button>
             </form>
         </div>
+        </center>
     );
 }
 

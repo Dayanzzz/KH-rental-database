@@ -107,31 +107,36 @@ height: 50%;
     border: 1px solid #ddd;
     border-radius: 5px;
     margin-left: 20px;
-    width: 250px; /* Set a fixed width */
+ 
 }
 
-.callout-box h3 {
-    margin: 0 0 10px;
+.reviewmodal-btn:hover{
+background-color: navy;
+color:white;
 }
 
 .callout-box button {
     padding: 10px 15px;
-    background-color: #007bff;
+    background-color: navy;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    width:100%;
+    
 }
 
 .callout-box button:hover {
-    background-color: #0056b3;
+    background-color: white;
+    border: 1px solid navy;
+    color:navy;
 }
 
 .leftdetails{
-    width:60%;
+    width:70%;
 }
 .rightdetails{
-    width: 40%;
+    width: 30%;
 }
 
 .detailsbody{
@@ -142,4 +147,25 @@ height: 50%;
 
 .first{
     text-align: left;
+}
+
+.reviews-summary{
+    margin-bottom:15px;
+}
+
+.calloutbox-top{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.calloutbox-bottom{
+    justify-content: stretch;
+}
+
+
+
+.reviews-delete:hover{
+    background-color: navy;
+color:white;
 }

@@ -42,14 +42,14 @@ function SpotsLayout() {
                                 <div className="location">{spot.city}, {spot.state}
                                 </div>
 
-                                <div className="star">{starEmoji} {averageRating}
+                                <div className="star">{starEmoji} <span className="spotGrid-star">{averageRating}</span>
                                 </div> 
                                
                                  </div>
 
                                 <div className="spotGridDetails">
                                      <p>
-                                        <span className="spotGrid-price">${spot.price.toFixed(2)}</span> night</p>
+                                       ${spot.price.toFixed(2)} night</p>
                                 </div>
                             </div>
                         </NavLink>

@@ -177,18 +177,20 @@ const SpotDetails = () => {
 
                 <div className="rightdetails">
                     <div className="callout-box">
-                        <h3>${spot.price.toFixed(2)} night</h3>
-                        <p>
-                            <span role="img" aria-label="star">⭐</span>
+                       <div className="calloutbox-top"><h3>${spot.price.toFixed(2)} night</h3>
+                       <div className="calloutbox-review"><span role="img" aria-label="star">⭐</span>
                             <span>{spot.numReviews > 0 ? spot.avgStarRating.toFixed(1) : "New"}</span>
                             {spot.numReviews > 0 && (
                                 <>
                                     <span> • </span>
                                     <span>{spot.numReviews} Review{spot.numReviews !== 1 ? 's' : ''}</span>
                                 </>
-                            )}
-                        </p>
-                        <button onClick={handleReserveClick}>Reserve</button>
+                            )}</div>
+
+
+                            </div> 
+                        
+                        <button className="calloutbox-bottom" onClick={handleReserveClick}>Reserve</button>
                     </div>
                 </div>
             </div>
@@ -211,7 +213,7 @@ const SpotDetails = () => {
             {/* Review Modal */}
             <div className="review-modal">
                 {currentUser && spot.Owner.id !== currentUser.id && !hasReviewed && (
-                    <button onClick={() => setIsModalOpen(true)}>Post Your Review</button>
+                    <button className="reviewmodal-btn" onClick={() => setIsModalOpen(true)}>Post Your Review</button>
                 )}
                 <ReviewModal 
                     isOpen={isModalOpen} 
@@ -230,7 +232,7 @@ const SpotDetails = () => {
                             <p>{review.review}</p>
                             {currentUser && review.User.id === currentUser.id && ( // Check if current user is the review's author
                                 <div>
-                                    <button onClick={() => handleDeleteReview(review.id)}>Delete</button>
+                                    <button className="reviews-delete" onClick={() => handleDeleteReview(review.id)}>Delete</button>
                                 </div>
                             )}
                         </div>

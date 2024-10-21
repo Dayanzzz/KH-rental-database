@@ -75,7 +75,7 @@ const ReviewModal = ({ isOpen, onClose, onSubmit }) => {
                             <span style={{ marginLeft: '8px' }}>Stars</span>
                         </div>
                     </div>
-                    <button
+                    <button className="postreview-btn"
                         type="submit"
                         disabled={!reviewText || reviewText.length < 10 || starRating === 0}
                     >

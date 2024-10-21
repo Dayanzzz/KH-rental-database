@@ -1,8 +1,8 @@
-h1 {
+.login {
     text-align: center;
     font-size: 2rem;
     margin-bottom: 1rem;
-    color:blue;
+    color:navy;
   }
   
   form {
@@ -59,7 +59,7 @@ h1 {
 }
 
 .demo-link {
-    color: blue;
+    color: navy;
     text-decoration: underline;
     cursor: pointer; /* Pointer cursor for clickable link */
 }

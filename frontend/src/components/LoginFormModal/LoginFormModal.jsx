@@ -52,7 +52,7 @@ function LoginFormModal() {
   const isButtonDisabled = credential.length < 4 || password.length < 6;
   return (
     <>
-      <h1>Log In</h1>
+      <h1 className="login">Log In</h1>
       <form onSubmit={handleSubmit} >
         <label>
           <input

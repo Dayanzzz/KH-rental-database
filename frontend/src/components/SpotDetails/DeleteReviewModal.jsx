@@ -1,4 +1,6 @@
 
+
+import "./DeleteReviewModal.css";
 const DeleteReviewModal = ({ title, message, onConfirm, onCancel }) => {
     return (
         <div className="modal">

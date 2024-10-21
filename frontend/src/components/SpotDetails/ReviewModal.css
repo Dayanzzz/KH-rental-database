@@ -33,3 +33,8 @@
 .star-rating label {
     margin-right: 10px;
 }
+
+.postreview-btn:hover{
+    background-color: navy;
+color:white;
+}

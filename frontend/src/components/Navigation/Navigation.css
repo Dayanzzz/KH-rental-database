@@ -17,13 +17,17 @@ ul {
   
   button {
     text-decoration: none; /* Remove underline from links */
-    color: rgb(35, 53, 191); /* Link text color */
+    color:navy; /* Link text color */
     font-weight: bold; /* Make text bold */
     padding: 8px 12px; /* Padding for clickable areas */
     border: 1px solid blue; /* Remove default button border */
     background: none; /* Remove button background */
     cursor: pointer; /* Change cursor to pointer */
     transition: background-color 0.3s; /* Smooth background color change */
+    /* transition: color #fff; */
+  }
+  button:hover{
+    color:white;
   }
   
 
