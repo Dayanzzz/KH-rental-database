@@ -89,7 +89,7 @@ const ManageSpots = () => {
                                 <div className="manage-spots-info-container">
                                     <div className="spotGridHeader">
                                     <div className="location">{spot.city}, {spot.state}</div>
-                                    <div className="star">{starEmoji} {(spot.avgRating || 0).toFixed(1)}</div>
+                                    <div className="star"> {starEmoji} {spot.numReviews > 0 ? (spot.avgRating || 0).toFixed(1) : "New"}</div>
                                 </div>
 
                                 <div className="spotGridDetails">

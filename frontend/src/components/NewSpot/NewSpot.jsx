@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { addSpot } from '../../store/spots'; 
 import { useNavigate } from 'react-router-dom';
 import { uploadSpotImage } from '../../store/spots';
-import './NewSpot.css'
+import './NewSpot.css';
 
 function NewSpot() {
     const dispatch = useDispatch(); 
@@ -22,20 +22,14 @@ function NewSpot() {
     const [longitude, setLongitude] = useState('');
     const [errors, setErrors] = useState({});
 
-
-
     const handleImageChange = (index, value) => {
         const newImageUrls = [...imageUrls];
         newImageUrls[index] = value;
         setImageUrls(newImageUrls);
     };
 
-
-
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-
 
         const newErrors = {};
         if (!country) newErrors.country = "Country is required.";
@@ -49,33 +43,19 @@ function NewSpot() {
         if (!longitude || longitude < -180 || longitude > 180) newErrors.longitude = "Longitude must be between -180 and 180.";
         if (!previewImage) newErrors.previewImage = "Preview image is required.";
 
-   
-
-
-
         const imageErrors = imageUrls.map(url => {
             const isValid = url === '' || /\.(png|jpg|jpeg)$/.test(url);
             return isValid ? '' : 'Image URL needs to end in png or jpg (or jpeg)';
         });
 
-
-
-
         if (imageErrors.some(error => error !== '')) {
             newErrors.imageErrors = imageErrors;
         }
-
-
-
-
 
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             return;
         }
-
-
-
 
         const data = {
             name,
@@ -91,16 +71,8 @@ function NewSpot() {
             images: imageUrls.filter(image => image) 
         };
 
-        console.log('Submitting data:', data);
-
-
-
         try {
             const result = await dispatch(addSpot(data));
-
-            console.log('Result from addSpot:', result);
-
-
 
             if (result && result.id) {
                 await dispatch(uploadSpotImage(result.id, imageUrls, previewImage));
@@ -109,10 +81,7 @@ function NewSpot() {
             } else {
                 alert('Failed to create spot. Please check your inputs.');
             }
-
-
         } catch (error) {
-            console.error('Error creating spot:', error);
             const errorMessage = error.response?.data?.error || 'An error occurred while creating the spot.';
             alert(errorMessage);
             if (error.response?.data?.errors) {
@@ -121,29 +90,13 @@ function NewSpot() {
         }
     };
 
-
-
-
     return (
         <div className="new-spot">
             <h1>Create a New Spot</h1>
-
-            <h2> Where&apos;s your place located?</h2>
-
+            <h2>Where&apos;s your place located?</h2>
             <p>Guests will only get your exact address once they booked a reservation.</p>
-
             <form onSubmit={handleSubmit}>
 
-                {Object.keys(errors).length > 0 && (
-                    <div className="error-summary">
-
-                        {Object.values(errors).map((error, index) => (
-                            <p key={index} className="error">{error}</p>
-                        ))}
-
-                    </div>
-
-                )}
                 <label>
                     Country:
                     <input
@@ -236,7 +189,6 @@ function NewSpot() {
                     {errors.price && <p className="error">{errors.price}</p>}
                 </label>
 
-
                 <div className="photo-section">
                     <h2>Liven up your spot with photos</h2>
                     <p>Submit a link to at least one photo to publish your spot.</p>
@@ -249,7 +201,6 @@ function NewSpot() {
                         />
                         {errors.previewImage && <p className="error">{errors.previewImage}</p>}
                     </label>
-
 
                     <label>Image URLs:</label>
                     {imageUrls.map((url, index) => (

@@ -26,9 +26,15 @@ const add = (spot) => ({
 });
 
 
-const addSpotImage =(image)=>({
-  type:ADD_SPOT_IMAGE,
- image,
+const addSpotImage =(image, spotId)=> ({
+  // console.log('Dispatching ADD_SPOT_IMAGE:', image);
+  // return {
+      type: ADD_SPOT_IMAGE,
+      image:{
+        ...image,
+        spotId,
+      
+  }
 });
 
 const remove = (spotId) => ({
@@ -146,11 +152,11 @@ export const uploadSpotImage = (spotId, imageUrls, previewImage) => async (dispa
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ url: previewImage, preview: true }), // Set this as preview
+            body: JSON.stringify({ url: previewImage, preview: true }), 
         });
 
         const newPreviewImage = await response.json();
-        dispatch(addSpotImage(newPreviewImage)); // Dispatch the preview image
+        dispatch(addSpotImage(newPreviewImage,spotId)); 
     } catch (error) {
         throw new Error(error.message || 'Failed to upload preview image');
     }
@@ -163,7 +169,7 @@ const promises = imageUrls.map((url) =>
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ url, preview: false }), // Other images are not previews
+        body: JSON.stringify({ url, preview: false }), 
     })
 );
 
@@ -171,7 +177,8 @@ try {
     const responses = await Promise.all(promises);
     const newImages = await Promise.all(responses.map(res => res.json()));
     newImages.forEach(newImage => {
-        dispatch(addSpotImage(newImage)); // Dispatch each new image
+      console.log('Dispatching ADD_SPOT_IMAGE for spotId:', spotId);
+        dispatch(addSpotImage(newImage,spotId)); 
     });
 } catch (error) {
     throw new Error(error.message || 'Failed to upload additional images');
@@ -179,41 +186,66 @@ try {
 };
 
 const initialState = {};
-
 const spotsReducer = (state = initialState, action) => {
+  // console.log('Current state:', state);
+  // console.log('Action:', action);
+
   switch (action.type) {
+
+
+
     case LOAD_SPOTS: {
       const newSpots = {};
       action.spots.forEach(spot => {
-        newSpots[spot.id] = spot;
-      })
+        newSpots[spot.id] = {
+          ...spot,
+        
+        };
+      });
       return {
         ...state,
         ...newSpots
-      }
+      };
     }
+
+
+
     case REMOVE_SPOT: {
       const newState = { ...state };
       delete newState[action.spotId];
       return newState;
     }
+
+
+
+
     case ADD_SPOT:
     case UPDATE_SPOT: {
       return {
         ...state,
-        [action.spot.id]: action.spot
+        [action.spot.id]: {
+          ...action.spot,
+          spotImages: action.spot.spotImages || [], 
+        }
       };
     }
-    case ADD_SPOT_IMAGE:  return {
-      ...state,
-      [action.image.spotId]: {
-          ...state[action.image.spotId],
-          images: [...(state[action.image.spotId]?.images || []), action.image],
-      },
-  };
-   
+
+
+
+
+    case ADD_SPOT_IMAGE: {
+      const spotId = action.image.spotId; 
+      return {
+        ...state,
+        [spotId]: {
+          ...state[spotId],
+          spotImages: [...(state[spotId]?.spotImages || []), action.image], 
+        },
+      };
+    }
     default:
       return state;
   }
 };
+
 export default spotsReducer;
