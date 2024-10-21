@@ -21,7 +21,7 @@ module.exports = {
         lat: 19.6406,
         lng: -155.9711,
         name: "Tropical Paradise Retreat",
-        description: "A cozy beachfront bungalow on the beautiful shores of Kailua-Kona, perfect for relaxing and soaking in the sun. Enjoy breathtaking ocean views from your private deck. The spacious bedroom features a king-sized bed and large windows that allow natural light to flood the space. The modern kitchen is fully equipped for all your cooking needs, and the bathroom includes a luxurious walk-in shower. Nearby activities include snorkeling, hiking, and exploring local markets.",
+        description: "A cozy beachfront bungalow on the beautiful shores of Kailua-Kona, perfect for relaxing and soaking in the sun.",
         price: 200.00
       },
       {
@@ -33,7 +33,7 @@ module.exports = {
         lat: 35.8046,
         lng: 139.7205,
         name: "Twilight Town Inn",
-        description: "A charming inn nestled in the heart of Kawaguchi, with a cozy atmosphere reminiscent of Twilight Town. Guests can enjoy serene garden views and a peaceful ambiance. The inn features tastefully decorated bedrooms, each equipped with comfortable bedding and modern amenities. The shared kitchen allows guests to prepare meals, while the bathroom includes a traditional soaking tub for relaxation. Explore local parks, cafes, and shops just a short walk away.",
+        description: "A charming inn nestled in the heart of Kawaguchi, with a cozy atmosphere reminiscent of Twilight Town.",
         price: 120.00
       },
       {
@@ -45,7 +45,7 @@ module.exports = {
         lat: 37.0267,
         lng: 27.4400,
         name: "Bastion Castle Stay",
-        description: "Stay in a stunning castle-like villa overlooking the Aegean Sea, combining history and luxury. Enjoy panoramic sea views from your balcony, and relax in elegantly furnished bedrooms that blend modern comfort with classic design. The kitchen is fully equipped for dining in, and the luxurious bathroom features a soaking tub with a view. Nearby, discover ancient ruins, vibrant local markets, and beautiful beaches.",
+        description: "Stay in a stunning castle-like villa overlooking the Aegean Sea, combining history and luxury.",
         price: 300.00
       },
       {
@@ -57,7 +57,7 @@ module.exports = {
         lat: 38.2975,
         lng: -122.2869,
         name: "Traverse Town Suites",
-        description: "Charming suites in the heart of Napa Valley, ideal for wine lovers and adventurers alike. Each suite boasts vineyard views and stylish decor. Enjoy a fully equipped kitchen for cooking gourmet meals, and unwind in the spacious bathroom with modern fixtures. Explore nearby wineries, hiking trails, and gourmet restaurants for a truly unforgettable experience.",
+        description: "Charming suites in the heart of Napa Valley, ideal for wine lovers and adventurers alike.",
         price: 180.00
       },
       {
@@ -69,7 +69,7 @@ module.exports = {
         lat: 31.6295,
         lng: -7.9811,
         name: "Agrabah Bazaar Stay",
-        description: "Experience the magic of Marrakech with a stay in a vibrant riad near the bustling markets. Enjoy views of the lively street below and the stunning Atlas Mountains in the distance. The beautifully decorated bedroom offers a cozy retreat, while the traditional Moroccan bathroom features intricate tile work. Prepare delicious meals in the communal kitchen and explore the nearby souks, palaces, and gardens.",
+        description: "Experience the magic of Marrakech with a stay in a vibrant riad near the bustling markets. Enjoy views of the lively street below and the stunning Atlas Mountains in the distance. The beautifully decorated bedroom offers a cozy retreat, while the traditional Moroccan bathroom features intricate tile work.",
         price: 150.00
       },
       {
@@ -81,7 +81,7 @@ module.exports = {
         lat: 21.1743,
         lng: -86.8515,
         name: "Neverland Beach House",
-        description: "A tropical beach house with stunning ocean views, perfect for families and fun-filled adventures. The spacious bedrooms are designed for comfort, with large windows overlooking the beach. The modern kitchen is perfect for family meals, and the bathroom includes a walk-in shower. Enjoy direct beach access and explore local water sports, shopping, and dining options just minutes away.",
+        description: "A tropical beach house with stunning ocean views, perfect for families and fun-filled adventures. The spacious bedrooms are designed for comfort, with large windows overlooking the beach. The modern kitchen is perfect for family meals, and the bathroom includes a walk-in shower.",
         price: 220.00
       },
       {
@@ -93,7 +93,7 @@ module.exports = {
         lat: -45.0312,
         lng: 168.6625,
         name: "Departure Lodge",
-        description: "A luxurious lodge with breathtaking views of Lake Wakatipu and the surrounding mountains. Each bedroom offers expansive views and elegant furnishings. The fully equipped kitchen allows for home-cooked meals, and the bathroom includes a spa tub for relaxation. Enjoy nearby hiking trails, adventure sports, and breathtaking scenery.",
+        description: "A luxurious lodge with breathtaking views of Lake Wakatipu and the surrounding mountains. Each bedroom offers expansive views and elegant furnishings. The fully equipped kitchen allows for home-cooked meals, and the bathroom includes a spa tub for relaxation.",
         price: 250.00
       },
       {
@@ -105,7 +105,7 @@ module.exports = {
         lat: 35.0844,
         lng: -106.6504,
         name: "Graveyard Oasis",
-        description: "A unique desert retreat featuring stunning landscapes and a tranquil atmosphere. The cozy bedrooms provide a serene escape, and the kitchen is perfect for preparing meals with local ingredients. The bathroom is equipped with modern fixtures and offers a relaxing ambiance. Explore nearby hiking trails, and enjoy the peace of the desert sunset.",
+        description: "A unique desert retreat featuring stunning landscapes and a tranquil atmosphere. The cozy bedrooms provide a serene escape, and the kitchen is perfect for preparing meals with local ingredients. The bathroom is equipped with modern fixtures and offers a relaxing ambiance.",
         price: 130.00
       },
       {
@@ -129,7 +129,7 @@ module.exports = {
         lat: 55.9533,
         lng: -3.1883,
         name: "Castle Stay",
-        description: "Stay in a historic castle in the heart of Edinburgh, rich with history and stunning architecture. Enjoy views of the city skyline from your bedroom, which combines classic charm with modern amenities. The kitchen is equipped for self-catering, while the luxurious bathroom features a clawfoot tub. Explore Edinburgh’s famous attractions, including the castle and royal mile, all just a short walk away.",
+        description: "Stay in a historic castle in the heart of Edinburgh, rich with history and stunning architecture. Enjoy views of the city skyline from your bedroom, which combines classic charm with modern amenities. The kitchen is equipped for self-catering, while the luxurious bathroom features a clawfoot tub.",
         price: 280.00
       },
       {
@@ -141,7 +141,7 @@ module.exports = {
         lat: 48.6360,
         lng: -1.5114,
         name: "Enchanted Garden Retreat",
-        description: "Experience the charm of Mont Saint-Michel with a stay in this picturesque retreat. The cozy bedrooms offer views of the beautiful gardens, and the kitchen is perfect for preparing breakfast. The bathroom features elegant decor and modern amenities. Explore the island’s historic sites, shops, and local cuisine just minutes away.",
+        description: "Experience the charm of Mont Saint-Michel with a stay in this picturesque retreat. The cozy bedrooms offer views of the beautiful gardens, and the kitchen is perfect for preparing breakfast. The bathroom features elegant decor and modern amenities.",
         price: 140.00
       },
       {
@@ -153,7 +153,7 @@ module.exports = {
         lat: 64.1355,
         lng: -21.8174,
         name: "Shadow Realm Lodge",
-        description: "Immerse yourself in the mystical atmosphere of Iceland with this unique lodge. Cloaks are included for your adventures! Enjoy stunning views of the surrounding landscape from your bedroom, which is designed for comfort. The kitchen is equipped for self-catering, and the bathroom offers modern amenities. Explore the nearby geothermal springs, waterfalls, and breathtaking landscapes.",
+        description: "Immerse yourself in the mystical atmosphere of Iceland with this unique lodge. Cloaks are included for your adventures! Enjoy stunning views of the surrounding landscape from your bedroom, which is designed for comfort.",
         price: 160.00
       },
     ], { validate: true });
